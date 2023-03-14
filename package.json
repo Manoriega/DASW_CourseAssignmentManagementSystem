@@ -1,0 +1,25 @@
+{
+  "name": "dasw_courseassignmentmanagementsystem",
+  "version": "1.0.0",
+  "description": "Este repositorio contiene el código fuente de una aplicación web de gestión de asignaciones de cursos. Permite a los profesores crear cursos y asignaciones, y a los estudiantes subir tareas en formato PDF para ser evaluadas según las rúbricas proporcionadas por el profesor. Incluye tanto el backend como el frontend.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manoriega/DASW_CourseAssignmentManagementSystem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manoriega/DASW_CourseAssignmentManagementSystem/issues"
+  },
+  "homepage": "https://github.com/Manoriega/DASW_CourseAssignmentManagementSystem#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
