@@ -1,1 +1,9 @@
+# Dependency directories
 node_modules/
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Package-Lock
+package-lock.json
