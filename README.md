@@ -1,7 +1,6 @@
 # DASW_CourseAssignmentManagementSystem
 
 Este repositorio contiene el código fuente de una aplicación web de gestión de asignaciones de cursos. Permite a los profesores crear cursos y asignaciones, y a los estudiantes subir tareas en formato PDF para ser evaluadas según las rúbricas proporcionadas por el profesor. Incluye tanto el backend como el frontend.
-
 ## Tecnologías utilizadas
 
 - Node.js
@@ -20,7 +19,6 @@ Este repositorio contiene el código fuente de una aplicación web de gestión d
 ## Instalación
 
 1. Clonar este repositorio:
-
 ```bash
   git clone https://github.com/Manoriega/DASW_CourseAssignmentManagementSystem.git
 ```
@@ -44,14 +42,12 @@ Este repositorio contiene el código fuente de una aplicación web de gestión d
 ```
 
 5. Modificar en archivo .env el usuario y la contraseña
-
 ```bash
     DB_USER = "****"
     DB_PASSWORD = "****"
 ```
 
 6. Correr el sistema
-
 ```bash
     npm start
 ```
