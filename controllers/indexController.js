@@ -1,15 +1,15 @@
 const dbManager = require("../singleton/dbManager");
 
-class IndexController {
-  async index(req, res) {
-    res.send({ status: 1, msg: "Server is okay" });
-  }
+const tableName = "new_table";
 
-  async getDefalt(req, res) {
-    const db = dbManager.getManager();
-    let selection = await db.selectAllTable("new_table");
-    res.json(selection);
-  }
+function index(req, res) {
+  res.send({ status: 1, msg: "Server is okay" });
 }
 
-module.exports = new IndexController();
+async function getDefault(req, res) {
+  const db = dbManager.getManager();
+  let selection = await db.selectAllTable(tableName);
+  res.json(selection);
+}
+
+module.exports = { index, getDefault };

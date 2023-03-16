@@ -2,13 +2,15 @@ const mysql = require("mysql");
 require("dotenv").config();
 
 class DataBase {
-  pool = mysql.createPool({
-    connectionLimit: 10,
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-  });
+  constructor() {
+    this.pool = mysql.createPool({
+      connectionLimit: 10,
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+    });
+  }
 
   /**
    * Insert new row into a table
@@ -25,12 +27,10 @@ class DataBase {
           if (error) {
             console.log(error);
             reject({
-              status: 0,
               msg: "Insertion failed.",
             });
           } else {
             resolve({
-              status: 1,
               msg: "New row inserted successfully",
               insertedId: results.insertId,
             });
@@ -57,12 +57,10 @@ class DataBase {
           if (error) {
             console.log(error);
             reject({
-              status: 0,
               msg: "Select failed.",
             });
           } else {
             resolve({
-              status: 1,
               msg: "Data fetch successfully",
               data: results,
             });
@@ -84,12 +82,10 @@ class DataBase {
         if (error) {
           console.log(error);
           reject({
-            status: 0,
             msg: "Select failed",
           });
         } else {
           resolve({
-            status: 1,
             msg: "Data fetch successfully",
             data: results,
           });
@@ -115,12 +111,10 @@ class DataBase {
           if (error) {
             console.log(error);
             reject({
-              status: 0,
               msg: "Delete failed",
             });
           } else {
             resolve({
-              status: 1,
               msg: "Delete succeed",
             });
           }
@@ -155,12 +149,10 @@ class DataBase {
           if (error) {
             console.log(error);
             reject({
-              status: 0,
               msg: "Update failed",
             });
           } else {
             resolve({
-              status: 1,
               msg: "Update succeed",
             });
           }
