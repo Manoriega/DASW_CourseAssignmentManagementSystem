@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Estudiantes</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
+        <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Estudiantes</li>
+      </ol>
+    </nav>
+    <div class="px-3">
+      <h1>Estudiantes</h1>
+
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          data-toggle="modal"
+          data-target="#addStudent"
+        >
+          <i class="fas fa-user-plus"></i> Añadir estudiante
+        </button>
+      </div>
+
+      <div id="students">
+        <div class="card my-2 p-3">
+          <h5>Mauricio Noriega Monarrez</h5>
+          <p>Estudiante desde 15/01/2023</p>
+        </div>
+        <div class="card my-2 p-3">
+          <h5>Humberto Longoria</h5>
+          <p>Estudiante desde 15/01/2023</p>
+        </div>
+        <div class="card my-2 p-3">
+          <h5>Gabriel Olvera</h5>
+          <p>Estudiante desde 15/01/2023</p>
+        </div>
+      </div>
+      <div
+        class="modal fade"
+        id="addStudent"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="addStudentLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <form id="createStudentForm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addStudentLabel">
+                  Añadir estudiante
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <label for="student_id">Nuevo estudiante:</label>
+                <select
+                  id="student_id"
+                  name="student_id"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Selecciona un estudiante</option>
+                  <option value="1">Mauricio</option>
+                  <option value="2">David</option>
+                  <option value="3">Moisés</option>
+                  <option value="4">Sebastián</option>
+                  <option value="5">Javier</option>
+                  <option value="6">Santiago</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Cerrar
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Añadir estudiante
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript -->
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
