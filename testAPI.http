@@ -1,0 +1,13 @@
+@host = http://localhost:3000
+
+###
+POST {{host}}/api/assignments
+Content-Type: "application/json"
+
+{    
+    "group_id": 1,
+    "rubric_id": 1,
+    "name": "Assignment name",
+    "description": "Description Description Description Description Description Description Description Description Description ",
+    "end_date": "2023-04-13"
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Landing Page</title>
+    <title>Evaluar</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -18,16 +18,28 @@
     />
   </head>
   <body>
-    <div class="jumbotron">
-      <h1 class="display-3">Course Assignment Management System</h1>
-      <p class="lead">Jumbo helper text</p>
-      <hr class="my-2" />
-      <p>More info</p>
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="cursos" role="button"
-          >Ir a mis cursos</a
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
+        <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
+        <li class="breadcrumb-item"><a id="assignmentsLink">Tareas</a></li>
+        <li class="breadcrumb-item">
+          <a id="assignmentLink">Tarea</a>
+        </li>
+        <li class="breadcrumb-item"><a id="entriesLink">Entregas</a></li>
+        <li class="breadcrumb-item"><a id="entriesLink">Entrega</a></li>
+        <li
+          id="entrieNameLink"
+          class="breadcrumb-item active"
+          aria-current="page"
         >
-      </p>
+          Evaluar
+        </li>
+      </ol>
+    </nav>
+    <div class="px-3">
+      <h1>Evaluación</h1>
     </div>
 
     <!-- Optional JavaScript -->
