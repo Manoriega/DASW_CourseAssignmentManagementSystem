@@ -2,11 +2,6 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 
-const assignmentsRoutes = require("./routes/assignments");
-const groupsRoutes = require("./routes/groups");
-const entriesRoutes = require("./routes/entries");
-const usersRoutes = require("./routes/users");
-
 const app = express();
 const port = 3000;
 app.use(morgan("dev"));
@@ -18,6 +13,10 @@ app.use("/", express.static(path.join(__dirname, "/public/html")));
 app.use(
   "/cursos/:id",
   express.static(path.join(__dirname, "/public/html/cursos/grupo/grupo.html"))
+);
+app.use(
+  "/cursos/:id/editar",
+  express.static(path.join(__dirname, "/public/html/cursos/crear"))
 );
 app.use(
   "/cursos/:grupoId/tareas",
@@ -51,10 +50,5 @@ app.use(
   "/cursos/:grupoId/tareas/:tareaId/entregas/:entregaId/evaluar",
   express.static(path.join(__dirname, "/public/html/evaluar"))
 );
-
-app.use("/api/assignments", assignmentsRoutes);
-app.use("/api/entry", entriesRoutes);
-app.use("/api/groups", groupsRoutes);
-app.use("/api/users", usersRoutes);
 
 app.listen(port, () => console.log(`Running on http://localhost:${port}`));
