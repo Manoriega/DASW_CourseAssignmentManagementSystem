@@ -32,144 +32,121 @@ const groupSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  published: {
-    type: Boolean,
-    default: true,
-  },
 });
 
-groupSchema.statics.getGroups = async (filters = {}) => {
-  let docs = await Groups.find(filters)
-    .populate({
-      path: "students",
-      model: "users",
-      select: "uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
-  return docs;
-};
-
-groupSchema.statics.getGroupsFromArray = async (groups) => {
-  let docs = await Groups.find({
-    uid: { $in: groups },
-  })
-    .populate({
-      path: "students",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
-  return docs;
+groupSchema.statics.getGroups = async (filtros = {}) => {
+  try {
+    let docs = await Groups.find(filtros);
+    console.log(docs);
+    return docs;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.getGroupById = async (uid) => {
-  let group = await Groups.findOne({ uid })
-    .populate({
-      path: "students",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
-  return group;
+  try {
+    let group = await Groups.findOne({ uid });
+    console.log(group);
+    return group;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.createGroup = async (group) => {
-  let newGroup = await Groups(group);
-  return await newGroup.save();
+  try {
+    let newGroup = await Groups(group);
+    let n = await newGroup.save();
+    console.log(n);
+    return n;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.updateGroup = async (uid, groupData) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { $set: groupData },
-    { new: true }
-  );
-  return updatedGroup;
+  try {
+    let updatedGroup = await Groups.findOneAndUpdate(
+      { uid },
+      { $set: groupData },
+      { new: true }
+    );
+    console.log(updatedGroup);
+    return updatedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.deleteGroup = async (uid) => {
-  let deletedGroup = await Groups.findOneAndDelete({ uid });
-  return deletedGroup;
-};
-
-groupSchema.statics.closeGroup = async (uid) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { published: false }
-  );
-  return updatedGroup;
+  try {
+    let deletedGroup = await Groups.findOneAndDelete({ uid });
+    console.log(deletedGroup);
+    return deletedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.addStudent = async (uid, studentId) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { $push: { students: studentId } },
-    { new: true }
-  );
-  return updatedGroup;
+  try {
+    let updatedGroup = await Groups.findOneAndUpdate(
+      { uid },
+      { $push: { students: studentId } },
+      { new: true }
+    );
+    console.log(updatedGroup);
+    return updatedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.removeStudent = async (uid, studentId) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { $pull: { students: studentId } },
-    { new: true }
-  );
-  return updatedGroup;
-};
-
-groupSchema.statics.deleteStudent = async (studentId) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { students: { $in: [studentId] } },
-    { $pull: { students: studentId } },
-    { new: true }
-  );
-  return updatedGroup;
+  try {
+    let updatedGroup = await Groups.findOneAndUpdate(
+      { uid },
+      { $pull: { students: studentId } },
+      { new: true }
+    );
+    console.log(updatedGroup);
+    return updatedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 groupSchema.statics.addAssignment = async (uid, assignmentId) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { $push: { assignments: assignmentId } },
-    { new: true }
-  );
-  return updatedGroup;
+  try {
+    let updatedGroup = await Groups.findOneAndUpdate(
+      { uid },
+      { $push: { assignments: assignmentId } },
+      { new: true }
+    );
+    console.log(updatedGroup);
+    return updatedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
-
 groupSchema.statics.removeAssignment = async (uid, assignmentId) => {
-  let updatedGroup = await Groups.findOneAndUpdate(
-    { uid },
-    { $pull: { assignments: assignmentId } },
-    { new: true }
-  );
-  return updatedGroup;
-};
-
-groupSchema.statics.getStudents = async (uid) => {
-  let group = await Groups.findOne({ uid });
-  return group.students;
-};
-
-groupSchema.statics.getAssignments = async (uid) => {
-  let group = await Groups.findOne({ uid });
-  return group.assignments;
+  try {
+    let updatedGroup = await Groups.findOneAndUpdate(
+      { uid },
+      { $pull: { assignments: assignmentId } },
+      { new: true }
+    );
+    console.log(updatedGroup);
+    return updatedGroup;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 let Groups = mongoose.model("groups", groupSchema);
 
-Groups.getGroups();
+//Groups.getGroups();
 
 //Groups.getGroupById("123456");
 
