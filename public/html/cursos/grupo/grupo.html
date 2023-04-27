@@ -27,7 +27,7 @@
   <body>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
         <li class="breadcrumb-item" aria-current="page" id="groupNameLink">
           Curso
@@ -35,7 +35,12 @@
       </ol>
     </nav>
     <div class="px-3">
-      <h4><u id="groupCode">P2023_ESI3124F</u></h4>
+      <div class="d-flex justify-content-between">
+        <h4><u id="groupCode">P2023_ESI3124F</u></h4>
+        <a href="/cursos/1/editar" class="btn btn-secondary" id="entriesButton">
+          Editar curso
+        </a>
+      </div>
       <h3 id="groupStudentsLink" class="mt-5">
         <u>
           <a

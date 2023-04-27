@@ -20,7 +20,7 @@
   <body>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
         <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
         <li class="breadcrumb-item"><a id="assignmentsLink">Tareas</a></li>
@@ -53,10 +53,13 @@
             <a
               href="/cursos/1/tareas/1/editar"
               class="btn btn-secondary"
-              id="entriesButton"
+              id="editAssignment"
             >
               Editar tarea
             </a>
+            <button class="btn btn-danger" id="deleteButton">
+              Eliminar tarea
+            </button>
             <button
               id="assignmentButton"
               class="btn btn-primary"
