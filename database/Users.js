@@ -116,9 +116,19 @@ userSchema.statics.removeGroup = async (uid, groupId) => {
   }
 };
 
+userSchema.statics.getGroups = async (uid) => {
+  try {
+    let user = await Users.findOne({ uid });
+    console.log(user.groups);
+    return user.groups;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 let Users = mongoose.model("users", userSchema);
 
-Users.getUsers();
+//Users.getUsers();
 
 //Users.getUserById("123456");
 
@@ -138,5 +148,7 @@ Users.getUsers();
 //Users.addGroup("123456", "oaijwf");
 
 //Users.removeGroup("123456", "sdqefe");
+
+Users.getGroups("123456");
 
 module.exports = { Users };

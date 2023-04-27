@@ -144,6 +144,24 @@ groupSchema.statics.removeAssignment = async (uid, assignmentId) => {
   }
 };
 
+groupSchema.statics.getStudents = async (uid) => {
+  try {
+    let group = await Groups.findOne({ uid });
+    return group.students;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+groupSchema.statics.getAssignments = async (uid) => {
+  try {
+    let group = await Groups.findOne({ uid });
+    return group.assignments;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 let Groups = mongoose.model("groups", groupSchema);
 
 //Groups.getGroups();
