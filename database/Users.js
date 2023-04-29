@@ -33,97 +33,83 @@ const userSchema = mongoose.Schema({
   },
 });
 
-userSchema.statics.getUsers = async (filtros = {}) => {
-  try {
-    let docs = await Users.find(filtros);
-    console.log(docs);
-    return docs;
-  } catch (e) {
-    console.log(e);
-  }
+userSchema.statics.getUsers = async (filters = {}) => {
+  let docs = await Users.find(filters, {
+    _id: 0,
+    uid: 1,
+    name: 1,
+    lastname: 1,
+    email: 1,
+    groups: 1,
+    usertype: 1,
+  });
+  return docs;
 };
 
 userSchema.statics.getUserById = async (uid) => {
-  try {
-    let user = await Users.findOne({ uid });
-    console.log(user);
-    return user;
-  } catch (e) {
-    console.log(e);
-  }
+  let user = await Users.findOne(
+    { uid },
+    {
+      _id: 0,
+      uid: 1,
+      name: 1,
+      lastname: 1,
+      email: 1,
+      groups: 1,
+      usertype: 1,
+    }
+  );
+  return user;
+};
+
+userSchema.statics.getUserByEmail = async (email) => {
+  let user = await Users.findOne(
+    { email },
+    { _id: 0, uid: 1, email: 1, password: 1, usertype: 1 }
+  );
+  return user;
 };
 
 userSchema.statics.createUser = async (user) => {
-  try {
-    let newUser = await Users(user);
-    let n = await newUser.save();
-    console.log(n);
-    return n;
-  } catch (error) {
-    console.log(e);
-  }
+  let newUser = await Users(user);
+  return await newUser.save();
 };
 
 userSchema.statics.updateUser = async (uid, userData) => {
-  try {
-    let updatedUser = await Users.findOneAndUpdate(
-      { uid },
-      { $set: userData },
-      { new: true }
-    );
-    console.log(updatedUser);
-    return updatedUser;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedUser = await Users.findOneAndUpdate(
+    { uid },
+    { $set: userData },
+    { new: true }
+  );
+  return updatedUser;
 };
 
 userSchema.statics.deleteUser = async (uid) => {
-  try {
-    let deletedUser = await Users.findOneAndDelete({ uid });
-    console.log(deletedUser);
-    return deletedUser;
-  } catch (e) {
-    console.log(e);
-  }
+  let deletedUser = await Users.findOneAndDelete({ uid });
+  return deletedUser;
 };
 
 userSchema.statics.addGroup = async (uid, groupId) => {
-  try {
-    let updatedUser = await Users.findOneAndUpdate(
-      { uid },
-      { $push: { groups: groupId } },
-      { new: true }
-    );
-    console.log(updatedUser);
-    return updatedUser;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedUser = await Users.findOneAndUpdate(
+    { uid },
+    { $push: { groups: groupId } },
+    { new: true }
+  );
+  return updatedUser;
 };
 
 userSchema.statics.removeGroup = async (uid, groupId) => {
-  try {
-    let updatedUser = await Users.findOneAndUpdate(
-      { uid },
-      { $pull: { groups: groupId } },
-      { new: true }
-    );
-    console.log(updatedUser);
-    return updatedUser;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedUser = await Users.findOneAndUpdate(
+    { uid },
+    { $pull: { groups: groupId } },
+    { new: true }
+  );
+  return updatedUser;
 };
 
 userSchema.statics.getGroups = async (uid) => {
-  try {
-    let user = await Users.findOne({ uid });
-    console.log(user.groups);
-    return user.groups;
-  } catch (e) {
-    console.log(e);
-  }
+  let user = await Users.findOne({ uid });
+  return user.groups;
 };
 
 let Users = mongoose.model("users", userSchema);
@@ -149,6 +135,6 @@ let Users = mongoose.model("users", userSchema);
 
 //Users.removeGroup("123456", "sdqefe");
 
-Users.getGroups("123456");
+//Users.getGroups("123456");
 
 module.exports = { Users };
