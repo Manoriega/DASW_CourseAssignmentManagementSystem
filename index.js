@@ -2,6 +2,9 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 const rubricaRoute = require("./routes/rubricas-routes");
+const groupRoutes = require("./routes/groupsRoutes");
+const authRoutes = require("./routes/authRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 const port = 3000;
@@ -61,4 +64,8 @@ app.use(
 app.use("/rubricas", express.static(path.join(__dirname, "/public/html/rubricas")));
 
 app.use("/api/rubricas", rubricaRoute);
+app.use("/api/groups", groupRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes);
+
 app.listen(port, () => console.log(`Running on http://localhost:${port}`));
