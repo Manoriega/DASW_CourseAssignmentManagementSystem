@@ -1,15 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { Users } = require("../database/Users");
 
-// Redireccionar si no está loggeado
-async function redirect(req, res, next) {
-  if (req.originalUrl == "/") {
-    next();
-    return;
-  }
-  res.redirect("/");
-}
-
 // Solo estudiantes o maestro del grupo
 async function isStudentOrTeacher(req, res, next) {
   let xAuth = req.get("x-auth") || {};
@@ -24,18 +15,17 @@ async function isStudentOrTeacher(req, res, next) {
         return;
       }
       let userD = decoded,
-        user = await Users.getUserByUid(userD.uid),
+        user = await Users.getUserById(userD.uid),
         groupId = req.params.id || null;
       if (user) {
         if (groupId) {
-          if (user.groups.includes(groupId) || userD.usertype == 3) next();
+          if (user.groups.includes(groupId)) next();
           else res.status(401).send({ belongs: false });
         } else res.status(400).send("Missing group id");
       } else res.status(404).send("User not found");
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 }
 
@@ -56,7 +46,6 @@ async function isLogged(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 }
 
@@ -79,33 +68,10 @@ async function teacherPermissions(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 }
 
-// Solo administrador loggeado
-async function onlyAdminLogged(req, res, next) {
-  let xAuth = req.get("x-auth") || req.cookies.userToken || null;
-
-  if (!xAuth) {
-    res.redirect("/");
-    return;
-  }
-  try {
-    jwt.verify(xAuth, "daswCosym", function (err, decoded) {
-      if (err) {
-        res.redirect("/");
-        return;
-      }
-      if (decoded.usertype != 3) res.redirect("/");
-      else next();
-    });
-  } catch (e) {
-    res.redirect("/");
-  }
-}
-
-// Solo permisos de administrador
+// Solo administrador
 async function onlyAdmin(req, res, next) {
   let xAuth = req.get("x-auth") || req.cookies.userToken || null;
 
@@ -125,7 +91,6 @@ async function onlyAdmin(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 }
 
@@ -134,6 +99,4 @@ module.exports = {
   onlyAdmin,
   teacherPermissions,
   isStudentOrTeacher,
-  redirect,
-  onlyAdminLogged,
 };

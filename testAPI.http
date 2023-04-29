@@ -1,7 +1,6 @@
 @groups = http://localhost:3000/api/groups
 @auth = http://localhost:3000/api/auth
 @users = http://localhost:3000/api/users
-@host = http://localhost:3000
 
 
 // GROUPS ============================================================================================================
@@ -13,13 +12,13 @@ x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ
 ###
 POST {{groups}}
 Content-Type: application/json
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgzMTM5OTkxfQ.Cep-i3iXa87rFR1l9kgiwBbohNE8VYn3XSHKmuVVUpU
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
 
 {
-    "title": "DESARROLLO DE APLICACIONES Y SERVICIOS WEB",
-    "code": "P2023_ESI3124F",
+    "title": "Innovación y emprendimiento",
+    "code": "P2023_EAM154E",
     "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
-    "teacher": "644c5c314ee26738959e3193"
+    "teacher": "nJybhHtnc1rOUMc9v5AS-"
 }
 
 ###
@@ -56,8 +55,8 @@ POST {{auth}}
 Content-Type: application/json
 
 {
-    "email": "admin@dasw.mx",
-    "password": "admin"
+    "email": "pedrogonzales@iteso.mx",
+    "password": "pedro"
 }
 
 ###
@@ -97,23 +96,3 @@ Content-Type: application/json
 
 ###
 DELETE {{users}}/jK5tR0oHhfksEY5JKAwM7
-{    
-    "group_id": 1,
-    "rubric_id": 1,
-    "name": "Assignment name",
-    "description": "Description Description Description Description Description Description Description Description Description ",
-    "end_date": "2023-04-13"
-}
-
-###
-GET {{host}}/api/rubricas
-
-###
-PUT {{host}}/api/rubricas/TooQEK1Chl39SZu87BR-X
-Content-Type: application/json
-
-{
-    "preguntas": ["El contenido presentado tiene que ver con la tarea?", "El companero demuestra coherencia e interes en el tema?"],
-    "owner":"nerdinvader67@gmail.com",
-    "curso":"Requerimientos de software"
-}

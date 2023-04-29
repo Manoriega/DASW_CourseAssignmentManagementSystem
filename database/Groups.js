@@ -32,116 +32,109 @@ const groupSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  published: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-groupSchema.statics.getGroups = async (filtros = {}) => {
-  try {
-    let docs = await Groups.find(filtros);
-    console.log(docs);
-    return docs;
-  } catch (e) {
-    console.log(e);
-  }
+groupSchema.statics.getGroups = async (filters = {}) => {
+  let docs = await Groups.find(filters);
+  return docs;
+};
+
+groupSchema.statics.getGroupsFromArray = async (groups) => {
+  let docs = await Groups.find({
+    uid: { $in: groups },
+  });
+  return docs;
 };
 
 groupSchema.statics.getGroupById = async (uid) => {
-  try {
-    let group = await Groups.findOne({ uid });
-    console.log(group);
-    return group;
-  } catch (e) {
-    console.log(e);
-  }
+  let group = await Groups.findOne({ uid });
+  return group;
 };
 
 groupSchema.statics.createGroup = async (group) => {
-  try {
-    let newGroup = await Groups(group);
-    let n = await newGroup.save();
-    console.log(n);
-    return n;
-  } catch (e) {
-    console.log(e);
-  }
+  let newGroup = await Groups(group);
+  return await newGroup.save();
 };
 
 groupSchema.statics.updateGroup = async (uid, groupData) => {
-  try {
-    let updatedGroup = await Groups.findOneAndUpdate(
-      { uid },
-      { $set: groupData },
-      { new: true }
-    );
-    console.log(updatedGroup);
-    return updatedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { $set: groupData },
+    { new: true }
+  );
+  return updatedGroup;
 };
 
 groupSchema.statics.deleteGroup = async (uid) => {
-  try {
-    let deletedGroup = await Groups.findOneAndDelete({ uid });
-    console.log(deletedGroup);
-    return deletedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let deletedGroup = await Groups.findOneAndDelete({ uid });
+  return deletedGroup;
+};
+
+groupSchema.statics.closeGroup = async (uid) => {
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { published: false }
+  );
+  return updatedGroup;
 };
 
 groupSchema.statics.addStudent = async (uid, studentId) => {
-  try {
-    let updatedGroup = await Groups.findOneAndUpdate(
-      { uid },
-      { $push: { students: studentId } },
-      { new: true }
-    );
-    console.log(updatedGroup);
-    return updatedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { $push: { students: studentId } },
+    { new: true }
+  );
+  return updatedGroup;
 };
 
 groupSchema.statics.removeStudent = async (uid, studentId) => {
-  try {
-    let updatedGroup = await Groups.findOneAndUpdate(
-      { uid },
-      { $pull: { students: studentId } },
-      { new: true }
-    );
-    console.log(updatedGroup);
-    return updatedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { $pull: { students: studentId } },
+    { new: true }
+  );
+  return updatedGroup;
+};
+
+groupSchema.statics.deleteStudent = async (studentId) => {
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { students: { $in: [studentId] } },
+    { $pull: { students: studentId } },
+    { new: true }
+  );
+  return updatedGroup;
 };
 
 groupSchema.statics.addAssignment = async (uid, assignmentId) => {
-  try {
-    let updatedGroup = await Groups.findOneAndUpdate(
-      { uid },
-      { $push: { assignments: assignmentId } },
-      { new: true }
-    );
-    console.log(updatedGroup);
-    return updatedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { $push: { assignments: assignmentId } },
+    { new: true }
+  );
+  return updatedGroup;
 };
+
 groupSchema.statics.removeAssignment = async (uid, assignmentId) => {
-  try {
-    let updatedGroup = await Groups.findOneAndUpdate(
-      { uid },
-      { $pull: { assignments: assignmentId } },
-      { new: true }
-    );
-    console.log(updatedGroup);
-    return updatedGroup;
-  } catch (e) {
-    console.log(e);
-  }
+  let updatedGroup = await Groups.findOneAndUpdate(
+    { uid },
+    { $pull: { assignments: assignmentId } },
+    { new: true }
+  );
+  return updatedGroup;
+};
+
+groupSchema.statics.getStudents = async (uid) => {
+  let group = await Groups.findOne({ uid });
+  return group.students;
+};
+
+groupSchema.statics.getAssignments = async (uid) => {
+  let group = await Groups.findOne({ uid });
+  return group.assignments;
 };
 
 let Groups = mongoose.model("groups", groupSchema);
