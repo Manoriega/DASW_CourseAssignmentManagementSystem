@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
+const rubricaRoute = require("./routes/rubricas-routes");
 
 const app = express();
 const port = 3000;
@@ -51,4 +52,7 @@ app.use(
   express.static(path.join(__dirname, "/public/html/evaluar"))
 );
 
+app.use("/rubricas", express.static(path.join(__dirname, "/public/html/rubricas")));
+
+app.use("/api/rubricas", rubricaRoute);
 app.listen(port, () => console.log(`Running on http://localhost:${port}`));
