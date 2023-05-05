@@ -36,61 +36,22 @@
     </nav>
     <div class="px-3">
       <div class="d-flex justify-content-between">
-        <h4><u id="groupCode">P2023_ESI3124F</u></h4>
-        <a href="/cursos/1/editar" class="btn btn-secondary" id="entriesButton">
-          Editar curso
-        </a>
+        <h4><u id="groupCode"></u></h4>
       </div>
       <h3 id="groupStudentsLink" class="mt-5">
         <u>
-          <a
-            href="/cursos/1/estudiantes"
-            id="studentsLink"
-            class="font-weight-normal text-dark"
-            >Estudiantes</a
+          <a id="studentsLink" class="font-weight-normal text-dark"
+            >Participantes</a
           >
         </u>
       </h3>
       <hr />
-      <p class="display-4" id="groupName">
-        Desarrollo de Aplicaciones y Servicios Web
-      </p>
+      <p class="display-4" id="groupName"></p>
       <hr />
 
       <div class="container">
         <strong>Información del curso</strong>
-        <p id="groupDescription">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut
-          impedit rem quisquam accusantium nam repellendus expedita nulla vitae
-          ullam dolor praesentium, excepturi totam. Et laudantium laboriosam
-          mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo
-          sunt voluptatibus quas doloremque facere hic eius quisquam voluptas
-          quae porro quia nulla fugiat harum, sapiente laudantium quidem
-          quibusdam! Doloremque provident eos enim modi. Earum explicabo
-          laboriosam placeat maxime repudiandae iste voluptatibus repellendus
-          labore sequi neque veniam facere, debitis omnis ducimus amet, aut
-          nesciunt accusamus deserunt autem. Hic voluptatibus assumenda ipsa
-          quasi similique, inventore voluptate labore delectus a odio sunt eius
-          consequatur dolorem veritatis temporibus nihil et quaerat vel autem
-          distinctio laborum! Impedit voluptates consectetur, eveniet labore
-          esse voluptatibus pariatur veniam vitae minus eligendi itaque
-          reiciendis, in inventore sequi deleniti temporibus qui nobis, a fugiat
-          dolorem natus excepturi! Cumque officia, veritatis quos odit vel
-          distinctio enim perspiciatis similique, reiciendis harum id provident,
-          ducimus asperiores totam soluta eius expedita accusamus dicta pariatur
-          nihil illo odio beatae rem. Sunt cum eligendi recusandae aspernatur
-          reiciendis voluptas at illum minima sequi exercitationem ipsa
-          quisquam, voluptates provident voluptatibus ullam itaque et!
-          Repellendus odio, magnam inventore maxime, officiis architecto
-          laudantium voluptatem aperiam illum neque sequi! Laborum inventore
-          distinctio exercitationem modi. Voluptas aspernatur deserunt aliquam
-          ratione delectus nemo, nostrum perspiciatis, magnam doloremque hic
-          ipsam repellendus officiis vero reiciendis eligendi molestiae suscipit
-          accusantium voluptatibus atque optio, blanditiis debitis corporis quae
-          beatae? Alias consequuntur, repudiandae vel minima dignissimos
-          accusamus tempore corrupti temporibus consectetur, omnis libero
-          recusandae asperiores! Quam vero quibusdam repudiandae quasi quia?
-        </p>
+        <p id="groupDescription"></p>
       </div>
 
       <h3 class="mt-5">
@@ -143,5 +104,29 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../../../js/Request/index.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script>
+      async function loadGroup() {
+        let url = window.location.href,
+          partesURL = url.split("/"),
+          codigo = partesURL[partesURL.length - 1];
+        let response = await GroupsAPI.getGroup(codigo);
+        if (response.status == 200) {
+          let group = await response.json();
+          groupCode.innerText = group.code;
+          groupName.innerText = group.title;
+          groupDescription.innerText = group.information;
+          groupNameLink.innerText = group.title;
+          studentsLink.href = `/cursos/${group.uid}/participantes`;
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+      loadGroup();
+    </script>
   </body>
 </html>

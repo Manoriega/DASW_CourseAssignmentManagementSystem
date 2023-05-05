@@ -24,38 +24,43 @@
     />
   </head>
   <body>
-    <div class="container-sm border rounded" id="logincontainer">
-      <form action="">
-        <h1>Login</h1>
-        <br />
-        <div class="input-group mb-3">
-          <span class="input-group-text"><i class="fas fa-user"></i></span>
-          <input
-            type="email"
-            id="usernameinput"
-            class="form-control"
-            placeholder="Username"
-            aria-label="Username"
-          />
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 offset-md-4 mt-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title text-center">Iniciar sesión</h5>
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="email">Correo electrónico</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    required
+                    id="email"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password">Contraseña</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    required
+                    id="password"
+                  />
+                </div>
+                <p id="errorMsg" class="text-danger d-none">
+                  El email y contraseña ingresados no coiniciden con ninguno de
+                  nuestros registros. Revisa e intenta de nuevo.
+                </p>
+                <button type="submit" class="btn btn-primary btn-block">
+                  Iniciar sesión
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text"><i class="fas fa-key"></i></span>
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password here"
-          />
-        </div>
-        <a
-          name=""
-          id="loginbutton"
-          class="btn btn-outline-primary"
-          href="./home/"
-          role="button"
-          >Continue</a
-        >
-      </form>
+      </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -74,5 +79,52 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../js/Request/index.js"></script>
+    <script src="../js/api/authapi.js"></script>
+    <script>
+      async function autoLogin() {
+        let response = await AuthAPI.checkLog();
+        if (response.status == 200) {
+          if (sessionStorage.getItem("usertype") < 3)
+            window.location.replace("/home");
+          else window.location.replace("/admin");
+        }
+      }
+
+      autoLogin();
+
+      let form = document.getElementById("loginForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let errorMsg = document.getElementById("errorMsg");
+        errorMsg.classList.add("d-none");
+
+        let email = $("#email").val(),
+          password = $("#password").val();
+
+        let response = await AuthAPI.login(email, password);
+        if (response.status == 200) {
+          let auth = await response.json();
+          var now = new Date();
+          var expireDate = new Date(
+            now.getFullYear() + 1,
+            now.getMonth(),
+            now.getDate()
+          );
+          document.cookie =
+            `userToken=${auth.token}; expires=` +
+            expireDate.toUTCString() +
+            "; path=/";
+          sessionStorage.setItem("usertype", auth.usertype);
+          if (auth.usertype == 3) window.location.replace("/admin");
+          else window.location.replace("/home");
+        } else if (response.status == 400) {
+          alert(auth);
+        } else {
+          errorMsg.classList.remove("d-none");
+        }
+      });
+    </script>
   </body>
 </html>

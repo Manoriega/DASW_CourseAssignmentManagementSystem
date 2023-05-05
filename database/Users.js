@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.statics.getUsers = async (filters = {}) => {
   let docs = await Users.find(filters, {
-    _id: 0,
+    _id: 1,
     uid: 1,
     name: 1,
     lastname: 1,
@@ -89,9 +89,9 @@ userSchema.statics.deleteUser = async (uid) => {
   return deletedUser;
 };
 
-userSchema.statics.addGroup = async (uid, groupId) => {
-  let updatedUser = await Users.findOneAndUpdate(
-    { uid },
+userSchema.statics.addGroup = async (id, groupId) => {
+  let updatedUser = await Users.findByIdAndUpdate(
+    id,
     { $push: { groups: groupId } },
     { new: true }
   );

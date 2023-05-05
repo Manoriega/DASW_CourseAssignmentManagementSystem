@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Landing Page</title>
+    <title>Administrador</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -15,36 +16,54 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
       integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="../../css/admin.css" />
   </head>
   <body>
-    <div class="jumbotron">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-danger" onclick="AuthAPI.logout()">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
-      <h1 class="display-3">Course Assignment Management System</h1>
-      <p class="lead">
-        ¡Bienvenido a nuestra aplicación de gestión de asignaciones de cursos!
-        Aquí, los estudiantes pueden acceder a las tareas asignadas por los
-        profesores, subir sus propias tareas y evaluar las tareas de sus
-        compañeros. Nuestro sistema de rúbricas facilita la evaluación y asegura
-        una evaluación justa y precisa. ¡Únete a nosotros y mejora tu
-        experiencia en la gestión de asignaciones de cursos hoy mismo!
-      </p>
-      <hr class="my-2" />
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="/cursos" role="button"
-          >Ir a mis cursos</a
+    <div class="container-fluid">
+      <div class="row">
+        <nav
+          class="col-12 col-md-2 sidebar sidebar-sticky flex-column py-2"
+          style="background-color: black"
         >
-      </p>
+          <h2 class="text-white">Administrador</h2>
+          <ul class="navbar-nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="./users">
+                <i class="fas fa-users"></i> Usuarios
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./groups">
+                <i class="fas fa-users"></i> Grupos
+              </a>
+            </li>
+          </ul>
+          <button
+            class="btn btn-outline-light mt-auto"
+            type="button"
+            onclick="AuthAPI.logout()"
+          >
+            Logout
+          </button>
+        </nav>
+        <main role="main" class="col-md-10 ml-sm-auto bg-dark text-light">
+          <p class="display-2 text-white text-center d-none d-md-block">
+            Bienvenido
+          </p>
+          <p class="display-4 text-white text-center d-block d-md-none">
+            Bienvenido
+          </p>
+        </main>
+      </div>
     </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -63,8 +82,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="../../js/api/authapi.js"></script>
-    <script>
-      if (!sessionStorage.getItem("usertype")) window.location.replace("/");
-    </script>
   </body>
 </html>

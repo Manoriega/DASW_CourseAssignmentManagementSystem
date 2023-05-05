@@ -4,13 +4,21 @@ const path = require("path");
 const groupRoutes = require("./routes/groupsRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
+const cookieParser = require("cookie-parser");
+const { onlyAdminLogged } = require("./middlewares/index");
 
 const app = express();
 const port = 3000;
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
+app.use(
+  "/admin",
+  onlyAdminLogged,
+  express.static(path.join(__dirname, "/public/html/admin"))
+);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use("/", express.static(path.join(__dirname, "/public/html")));
 app.use(
@@ -26,8 +34,8 @@ app.use(
   express.static(path.join(__dirname, "/public/html/tareas"))
 );
 app.use(
-  "/cursos/:grupoId/estudiantes",
-  express.static(path.join(__dirname, "/public/html/cursos/estudiantes"))
+  "/cursos/:grupoId/participantes",
+  express.static(path.join(__dirname, "/public/html/cursos/participantes"))
 );
 app.use(
   "/cursos/:grupoId/tareas/crear",
