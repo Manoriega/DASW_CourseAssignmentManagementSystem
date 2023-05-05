@@ -30,6 +30,7 @@ router.get("/", isLogged, async (req, res) => {
     res.send(groups);
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -59,11 +60,12 @@ router.post("/", onlyAdmin, async (req, res) => {
     teacher,
   };
   try {
-    await Users.addGroup(teacher, uid);
     let mongoResponse = await Groups.createGroup(newGroup);
+    await Users.addGroup(teacher, uid);
     res.status(201).send(mongoResponse);
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -80,6 +82,7 @@ router.put("/:id/published", onlyAdmin, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -96,6 +99,7 @@ router.delete("/:id/published", teacherPermissions, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -108,6 +112,7 @@ router.get("/:id", isStudentOrTeacher, async (req, res) => {
     else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -128,6 +133,7 @@ router.put("/:id", onlyAdmin, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -142,6 +148,7 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -152,11 +159,11 @@ router.get("/:id/students", isStudentOrTeacher, async (req, res) => {
     let groupId = req.params.id;
     let group = await Groups.getGroupById(groupId);
     if (group) {
-      let students = await Users.getUsers({ uid: { $in: group.students } });
-      res.send(students);
+      res.send(group.students);
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -177,6 +184,7 @@ router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -197,6 +205,7 @@ router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
     } else res.status(404).send("Group not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 

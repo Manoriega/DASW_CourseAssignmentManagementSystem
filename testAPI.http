@@ -12,13 +12,13 @@ x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ
 ###
 POST {{groups}}
 Content-Type: application/json
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgzMTM5OTkxfQ.Cep-i3iXa87rFR1l9kgiwBbohNE8VYn3XSHKmuVVUpU
 
 {
-    "title": "Innovación y emprendimiento",
-    "code": "P2023_EAM154E",
+    "title": "DESARROLLO DE APLICACIONES Y SERVICIOS WEB",
+    "code": "P2023_ESI3124F",
     "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
-    "teacher": "nJybhHtnc1rOUMc9v5AS-"
+    "teacher": "644c5c314ee26738959e3193"
 }
 
 ###
@@ -55,8 +55,8 @@ POST {{auth}}
 Content-Type: application/json
 
 {
-    "email": "pedrogonzales@iteso.mx",
-    "password": "pedro"
+    "email": "admin@dasw.mx",
+    "password": "admin"
 }
 
 ###

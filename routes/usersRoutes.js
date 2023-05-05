@@ -23,6 +23,7 @@ router.get("/", onlyAdmin, async (req, res) => {
     res.send(users);
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -59,6 +60,7 @@ router.post("/", onlyAdmin, async (req, res) => {
     res.status(201).send(mongoResponse);
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -71,6 +73,7 @@ router.get("/:id", onlyAdmin, async (req, res) => {
     else res.status(404).send("User not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -95,6 +98,7 @@ router.put("/:id", onlyAdmin, async (req, res) => {
     } else res.status(404).send("User not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -110,6 +114,7 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
     } else res.status(404).send("User not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 

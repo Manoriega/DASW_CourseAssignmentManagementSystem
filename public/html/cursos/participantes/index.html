@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Estudiantes</title>
+    <title>Participantes</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -29,14 +29,16 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
-        <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Estudiantes</li>
+        <li class="breadcrumb-item"><a id="groupNameLink">Curso</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Participantes
+        </li>
       </ol>
     </nav>
     <div class="px-3">
-      <h1>Estudiantes</h1>
+      <h1>Participantes</h1>
 
-      <div class="d-flex justify-content-end">
+      <div id="addStudentDiv" class="d-flex justify-content-end">
         <button
           type="button"
           class="btn btn-outline-primary"
@@ -47,35 +49,7 @@
         </button>
       </div>
 
-      <div id="students">
-        <div class="card my-2 p-3">
-          <h5>Mauricio Noriega Monarrez</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card my-2 p-3">
-          <h5>Humberto Longoria</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card my-2 p-3">
-          <h5>Gabriel Olvera</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      <div id="studentsList"></div>
       <div
         class="modal fade"
         id="addStudent"
@@ -152,5 +126,60 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <script src="../../../js/Request/index.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script>
+      let usertype = sessionStorage.getItem("usertype");
+
+      async function loadGroup() {
+        if (usertype == 1) {
+          addStudentDiv.classList.remove("d-flex");
+          addStudentDiv.classList.add("d-none");
+        }
+
+        let url = window.location.href,
+          partesURL = url.split("/"),
+          codigo = partesURL[partesURL.length - 3];
+        let response = await GroupsAPI.getGroup(codigo);
+        if (response.status == 200) {
+          let group = await response.json(),
+            students = group.students,
+            teacher = group.teacher;
+          groupNameLink.innerText = group.title;
+          groupNameLink.href = "/cursos/" + group.uid;
+          studentsList.innerHTML =
+            `
+          <div class="card my-2 p-3">
+            <h5>${teacher.name} ${teacher.lastname}</h5>                        
+            <p><strong>Profesor</strong></p>
+          </div>
+          ` +
+            students.map(
+              (student) => `
+            <div class="card my-2 p-3">
+              <h5>${student.name} ${student.lastname}</h5>
+              <p>Estudiante</p>
+              ${
+                usertype == 2
+                  ? `<div class="d-flex justify-content-end">
+                <button class="btn btn-danger">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>`
+                  : ""
+              }
+            </div>
+            `
+            );
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+      loadGroup();
+    </script>
   </body>
 </html>

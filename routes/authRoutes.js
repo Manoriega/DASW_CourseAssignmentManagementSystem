@@ -22,6 +22,7 @@ router.get("/", async (req, res) => {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
@@ -58,12 +59,13 @@ router.post("/", async (req, res) => {
           );
           res.send({ token, usertype: userEmail.usertype });
         } else {
-          res.status(404).send("Bad password");
+          res.status(404).send("Bad Request");
         }
       });
-    } else res.status(404).send("Email not found");
+    } else res.status(404).send("Bad Request");
   } catch (e) {
     res.status(400).send("An error has occurred");
+    console.log(e);
   }
 });
 
