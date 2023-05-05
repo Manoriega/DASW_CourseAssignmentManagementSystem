@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tarea</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+        <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
+        <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
+        <li class="breadcrumb-item"><a id="assignmentsLink">Tareas</a></li>
+        <li
+          id="assignmentNameLink"
+          class="breadcrumb-item active"
+          aria-current="page"
+        >
+          Tarea
+        </li>
+      </ol>
+    </nav>
+    <form
+      id="tareaFileForm"
+      action="form"
+      enctype="multipart/form-data"
+      method="post"
+    >
+      <div class="px-3">
+        <div class="d-flex justify-content-between align-items-center pr-5">
+          <h2 id="assignmentName">Nombre de la tarea</h2>
+          <div>
+            <a
+              class="btn btn-primary"
+              id="entriesButton"
+              href="/cursos/1/tareas/1/entregas"
+            >
+              Ver entregas
+            </a>
+            <a
+              href="/cursos/1/tareas/1/editar"
+              class="btn btn-secondary"
+              id="editAssignment"
+            >
+              Editar tarea
+            </a>
+            <button class="btn btn-danger" id="deleteButton">
+              Eliminar tarea
+            </button>
+            <button
+              id="assignmentButton"
+              class="btn btn-primary"
+              disabled
+              type="submit"
+            >
+              Entregar Tarea
+            </button>
+          </div>
+        </div>
+        <hr />
+        <p>
+          <strong>Fecha de entrega</strong>
+          <span id="assignmentDate">2023/05/14</span>
+        </p>
+        <hr />
+
+        <p id="assignmentDescription">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum quo
+          consequuntur, dolore atque cupiditate obcaecati ipsam neque fuga
+          quisquam quas excepturi impedit necessitatibus placeat reprehenderit
+          minima totam ipsa laudantium, suscipit, sit odio. Dolorum animi,
+          temporibus laborum magnam eligendi aspernatur quis labore repellendus,
+          harum reiciendis, doloribus similique obcaecati dolore ad tenetur
+          deleniti. Odio perferendis eaque nobis quisquam natus consequatur, cum
+          ab nesciunt ad voluptatibus et laudantium perspiciatis doloremque,
+          voluptatum harum odit, illo aliquid delectus adipisci non. Similique
+          at ducimus reprehenderit eos, voluptatibus quibusdam, possimus
+          mollitia iusto placeat earum accusantium? In reprehenderit maxime
+          eveniet voluptatum quia temporibus facilis, doloribus non, sapiente
+          laudantium iusto doloremque ex. Harum esse, totam possimus ducimus
+          adipisci ab ut eaque voluptate corrupti amet sequi tempora sunt
+          doloribus officia quia, illo facilis asperiores quae.
+        </p>
+
+        <div id="assignmentForm" class="form-group">
+          <label for="tareaFileForm">Carga tu archivo (.pdf)</label>
+          <input type="hidden" name="user_id" id="user_id" value="3" />
+          <input
+            type="file"
+            class="form-control-file"
+            id="tareaInputFile"
+            name="pdf"
+            required
+            accept=".pdf"
+          />
+          <div
+            id="assignmentDone"
+            class="alert alert-success my-2"
+            role="alert"
+          >
+            Ya has entregado esta tarea
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Optional JavaScript -->
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+@host = http://localhost:3000
+
+###
+POST {{host}}/api/assignments
+Content-Type: "application/json"
+
+{    
+    "group_id": 1,
+    "rubric_id": 1,
+    "name": "Assignment name",
+    "description": "Description Description Description Description Description Description Description Description Description ",
+    "end_date": "2023-04-13"
+}
+
+###
+GET {{host}}/api/rubricas
+
+###
+PUT {{host}}/api/rubricas/TooQEK1Chl39SZu87BR-X
+Content-Type: application/json
+
+{
+    "preguntas": ["El contenido presentado tiene que ver con la tarea?", "El companero demuestra coherencia e interes en el tema?"],
+    "owner":"nerdinvader67@gmail.com",
+    "curso":"Requerimientos de software"
+}
