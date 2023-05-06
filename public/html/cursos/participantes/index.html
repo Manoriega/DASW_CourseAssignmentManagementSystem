@@ -59,7 +59,7 @@
         aria-hidden="true"
       >
         <div class="modal-dialog" role="document">
-          <form id="createStudentForm">
+          <form id="addStudentForm">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="addStudentLabel">
@@ -83,12 +83,6 @@
                   required
                 >
                   <option value="">Selecciona un estudiante</option>
-                  <option value="1">Mauricio</option>
-                  <option value="2">David</option>
-                  <option value="3">Moisés</option>
-                  <option value="4">Sebastián</option>
-                  <option value="5">Javier</option>
-                  <option value="6">Santiago</option>
                 </select>
               </div>
               <div class="modal-footer">
@@ -132,6 +126,22 @@
     <script>
       let usertype = sessionStorage.getItem("usertype");
 
+      async function removeStudent(studentId) {
+        let url = window.location.href,
+          partesURL = url.split("/"),
+          groupId = partesURL[partesURL.length - 3];
+        let response = await GroupsAPI.removeStudentToGroup(studentId, groupId);
+        if (response.status == 201) {
+          $("#addStudent").modal("hide");
+          loadGroup();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
       async function loadGroup() {
         if (usertype == 1) {
           addStudentDiv.classList.remove("d-flex");
@@ -155,15 +165,16 @@
             <p><strong>Profesor</strong></p>
           </div>
           ` +
-            students.map(
-              (student) => `
+            students
+              .map(
+                (student) => `
             <div class="card my-2 p-3">
               <h5>${student.name} ${student.lastname}</h5>
               <p>Estudiante</p>
               ${
                 usertype == 2
                   ? `<div class="d-flex justify-content-end">
-                <button class="btn btn-danger">
+                <button class="btn btn-danger" onclick="removeStudent('${student._id}')">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>`
@@ -171,6 +182,22 @@
               }
             </div>
             `
+              )
+              .join("");
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+        let studentsResponse = await GroupsAPI.getUsersNotInGroup(codigo);
+        if (studentsResponse.status == 200) {
+          let students = await studentsResponse.json();
+          student_id.innerHTML =
+            '<option value="">Selecciona un estudiante</option>' +
+            students.map(
+              (student) =>
+                `<option value="${student._id}">${student.name} ${student.lastname}</option>`
             );
         } else if (response.status == 400) {
           alert("Ha ocurrido un error. Intenta más tarde");
@@ -179,7 +206,27 @@
           window.location.replace("/");
         }
       }
+
       loadGroup();
+
+      let addStudentForm = document.getElementById("addStudentForm");
+      addStudentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let studentId = student_id.value;
+        let url = window.location.href,
+          partesURL = url.split("/"),
+          groupId = partesURL[partesURL.length - 3];
+        let response = await GroupsAPI.addStudentToGroup(studentId, groupId);
+        if (response.status == 201) {
+          $("#addStudent").modal("hide");
+          loadGroup();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      });
     </script>
   </body>
 </html>

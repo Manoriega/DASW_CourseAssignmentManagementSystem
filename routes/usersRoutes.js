@@ -68,7 +68,7 @@ router.post("/", onlyAdmin, async (req, res) => {
 
 router.get("/:id", onlyAdmin, async (req, res) => {
   try {
-    let user = await Users.getUserById(req.params.id);
+    let user = await Users.getUserByUid(req.params.id);
     if (user) res.send(user);
     else res.status(404).send("User not found");
   } catch (e) {
@@ -81,7 +81,7 @@ router.get("/:id", onlyAdmin, async (req, res) => {
 
 router.put("/:id", onlyAdmin, async (req, res) => {
   try {
-    let user = await Users.getUserById(req.params.id);
+    let user = await Users.getUserByUid(req.params.id);
     if (user) {
       let { name, lastname, email, password } = req.body;
       let userUpdated = {};
@@ -106,7 +106,7 @@ router.put("/:id", onlyAdmin, async (req, res) => {
 
 router.delete("/:id", onlyAdmin, async (req, res) => {
   try {
-    let user = await Users.getUserById(req.params.id);
+    let user = await Users.getUserByUid(req.params.id);
     if (user) {
       await Users.deleteUser(req.params.id);
       await Groups.deleteStudent(req.params.id);

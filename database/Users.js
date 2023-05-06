@@ -46,7 +46,7 @@ userSchema.statics.getUsers = async (filters = {}) => {
   return docs;
 };
 
-userSchema.statics.getUserById = async (uid) => {
+userSchema.statics.getUserByUid = async (uid) => {
   let user = await Users.findOne(
     { uid },
     {
@@ -59,6 +59,19 @@ userSchema.statics.getUserById = async (uid) => {
       usertype: 1,
     }
   );
+  return user;
+};
+
+userSchema.statics.getUserById = async (id) => {
+  let user = await Users.findById(id, {
+    _id: 0,
+    uid: 1,
+    name: 1,
+    lastname: 1,
+    email: 1,
+    groups: 1,
+    usertype: 1,
+  });
   return user;
 };
 
@@ -89,6 +102,15 @@ userSchema.statics.deleteUser = async (uid) => {
   return deletedUser;
 };
 
+userSchema.statics.studentsToAdd = async (groupId) => {
+  let usersToAdd = await Users.find({
+    groups: { $nin: [groupId] },
+    usertype: 1,
+  });
+  console.log(usersToAdd);
+  return usersToAdd;
+};
+
 userSchema.statics.addGroup = async (id, groupId) => {
   let updatedUser = await Users.findByIdAndUpdate(
     id,
@@ -98,9 +120,9 @@ userSchema.statics.addGroup = async (id, groupId) => {
   return updatedUser;
 };
 
-userSchema.statics.removeGroup = async (uid, groupId) => {
-  let updatedUser = await Users.findOneAndUpdate(
-    { uid },
+userSchema.statics.removeGroup = async (id, groupId) => {
+  let updatedUser = await Users.findByIdAndUpdate(
+    id,
     { $pull: { groups: groupId } },
     { new: true }
   );
@@ -116,7 +138,7 @@ let Users = mongoose.model("users", userSchema);
 
 //Users.getUsers();
 
-//Users.getUserById("123456");
+//Users.getUserByUid("123456");
 
 /* Users.createUser({
   uid: "123456",
