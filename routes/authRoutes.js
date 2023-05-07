@@ -22,7 +22,6 @@ router.get("/", async (req, res) => {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 });
 
@@ -51,7 +50,6 @@ router.post("/", async (req, res) => {
         if (okay) {
           let token = jwt.sign(
             {
-              id: userEmail._id,
               email: email,
               uid: userEmail.uid,
               usertype: userEmail.usertype,
@@ -60,13 +58,12 @@ router.post("/", async (req, res) => {
           );
           res.send({ token, usertype: userEmail.usertype });
         } else {
-          res.status(404).send("Bad Request");
+          res.status(404).send("Bad password");
         }
       });
-    } else res.status(404).send("Bad Request");
+    } else res.status(404).send("Email not found");
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
   }
 });
 

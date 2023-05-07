@@ -39,49 +39,19 @@ const groupSchema = mongoose.Schema({
 });
 
 groupSchema.statics.getGroups = async (filters = {}) => {
-  let docs = await Groups.find(filters)
-    .populate({
-      path: "students",
-      model: "users",
-      select: "uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
+  let docs = await Groups.find(filters);
   return docs;
 };
 
 groupSchema.statics.getGroupsFromArray = async (groups) => {
   let docs = await Groups.find({
     uid: { $in: groups },
-  })
-    .populate({
-      path: "students",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
+  });
   return docs;
 };
 
 groupSchema.statics.getGroupById = async (uid) => {
-  let group = await Groups.findOne({ uid })
-    .populate({
-      path: "students",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    })
-    .populate({
-      path: "teacher",
-      model: "users",
-      select: "_id uid name lastname email usertype",
-    });
+  let group = await Groups.findOne({ uid });
   return group;
 };
 
