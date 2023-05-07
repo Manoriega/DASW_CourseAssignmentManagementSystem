@@ -1,12 +1,28 @@
-const router = require("express").Router();
-const { Rubrica } = require("../database/rubrics");
-const nanoid = require("nanoid");
-const { validateRubricPost } = require("../middlewares/validation");
+const router = require('express').Router();
+const {Rubrica} = require('../database/rubrics');
+const nanoid = require('nanoid');
+const {validateRubricPost} = require('../middlewares/validation');
+const jwt = require("jsonwebtoken");
+const {
+    isLogged,
+    onlyAdmin,
+    teacherPermissions,
+    isStudentOrTeacher,
+  } = require("../middlewares");
 
-router.get("/", async (req, res) => {
-  let rubricas = await Rubrica.getRubricas();
-  res.send(rubricas);
-  //res.status(200).send({Repuesta: "this is actually working"});
+
+router.get('/', isLogged, async (req, res) => {
+    let studentToken = req.get("x-auth"),
+    student = jwt.decode(studentToken);
+    try {
+
+        let rubricas = await Rubrica.getRubricaById("nerdinvader67@gmail.com");
+        res.send(rubricas); 
+    }
+    catch (e) {
+        res.status(400).send("An error has occurred");
+      }
+    //res.status(200).send({Repuesta: "this is actually working"});
 });
 
 router.get("/:id", async (req, res) => {

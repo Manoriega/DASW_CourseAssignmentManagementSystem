@@ -25,9 +25,9 @@ const RubricSchema = mongoose.Schema({
     }
 });
 
-RubricSchema.statics.getRubricaById = async(uid) => 
+RubricSchema.statics.getRubricaById = async(owner) => 
 {
-    let doc = await Rubrica.findOne({uid});
+    let doc = await Rubrica.findOne({owner});
     console.log(doc);
     return doc;
 }
