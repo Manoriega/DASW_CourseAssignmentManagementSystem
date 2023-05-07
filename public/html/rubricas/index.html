@@ -31,11 +31,12 @@
       <tbody id="rubricasList"></tbody>
 
       </table>
+      <script src="../../js/Request/index.js"></script>
       <script>
         let  rubricas = [];
       let rubricasList = document.getElementById("rubricasList");
       async function loadRubricas() {
-        let resp = await fetch('/api/rubricas')
+        let resp = await Request.get('/api/rubricas');
         rubricas = await resp.json();
         rubricasList.innerHTML = rubricas.map(rubrica => `
         <tr> 

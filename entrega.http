@@ -59,9 +59,43 @@ x-auth:
 POST {{host}}/api/groups/:groupId/student/:studentId
 x-auth: 
 
-// Ver rúbricas
+//LOGIN CON PROFESOR
+###
+POST {{host}}/api/auth
+Content-Type: application/json
 
+{
+    "email": "pedrogonzales@iteso.mx",
+    "password": "Pedro1"
+}
+###
 // Crear una rúbrica
+POST  {{host}}/api/rubricas/
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNTA5fQ.rwFepv7DjN0ABo_t37UCyQx_S-BLJoh3mDnpPcgfrIM
+Content-Type: application/json
+
+{
+    "nombre": "Tarea 1 Web Rubrica",
+    "preguntas": ["Mantuvo el HTML y CSS separados en sus archivos?",
+    "El companero usa bootstrap para estilizar su pagina web?"],
+    "owner":"pedrogonzales@iteso.mx",
+    "curso":"Desarrollo de Aplicaciones y Servicios Web"
+}
+
+//mostrar rubricas de usuario 
+###
+GET {{host}}/api/rubricas/
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNzc5fQ.hsDBm0ruzKc2nI2IsSm1YUKETCihVdXT5MZezM2XXPA
+
+//borrar una rubrica 
+###
+DELETE {{host}}/api/rubricas/9O4YA6_6t8r3kAl2CPvWY
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMxMjkzfQ.v-jTVZ7ezkdDrwCTwSmdhEUZmhj7aiGrcluAqZ0slaU
+
+//ver una rubrica en especifico:
+###
+GET {{host}}/api/rubricas/B9QkHQ5EHVa1o46g5ExQs
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNzc5fQ.hsDBm0ruzKc2nI2IsSm1YUKETCihVdXT5MZezM2XXPA
 
 // Crear una tarea
 

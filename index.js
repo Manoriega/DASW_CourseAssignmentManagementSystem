@@ -5,7 +5,8 @@ const rubricaRoute = require("./routes/rubricas-routes");
 const groupRoutes = require("./routes/groupsRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
-const rubricaRoute = require("./routes/rubricas-routes");
+const cookieParser = require("cookie-parser");
+const { onlyAdminLogged } = require("./middlewares/index");
 
 const app = express();
 const port = 3000;
