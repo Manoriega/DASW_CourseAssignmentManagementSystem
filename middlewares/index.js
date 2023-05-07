@@ -25,7 +25,7 @@ async function isStudentOrTeacher(req, res, next) {
       }
       let userD = decoded,
         user = await Users.getUserByUid(userD.uid),
-        groupId = req.params.id || null;
+        groupId = req.params.groupId || null;
       if (user) {
         if (groupId) {
           if (user.groups.includes(groupId) || userD.usertype == 3) next();

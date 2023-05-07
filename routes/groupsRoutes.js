@@ -105,9 +105,9 @@ router.delete("/:id/published", teacherPermissions, async (req, res) => {
 
 // Obtener un grupo
 
-router.get("/:id", isStudentOrTeacher, async (req, res) => {
+router.get("/:groupId", isStudentOrTeacher, async (req, res) => {
   try {
-    let group = await Groups.getGroupById(req.params.id);
+    let group = await Groups.getGroupById(req.params.groupId);
     if (group) res.send(group);
     else res.status(404).send("Group not found");
   } catch (e) {
@@ -166,9 +166,9 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
 
 // Obtener estudiantes de un grupo
 
-router.get("/:id/students", isStudentOrTeacher, async (req, res) => {
+router.get("/:groupId/students", isStudentOrTeacher, async (req, res) => {
   try {
-    let groupId = req.params.id;
+    let groupId = req.params.groupId;
     let group = await Groups.getGroupById(groupId);
     if (group) {
       res.send(group.students);

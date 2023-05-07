@@ -117,3 +117,27 @@ Content-Type: application/json
     "owner":"nerdinvader67@gmail.com",
     "curso":"Requerimientos de software"
 }
+
+
+// ===================================================================================================
+// Asignments 
+
+// Ver tarea
+###
+GET {{host}}/api/assignments/64571f49ad5d2280125d6e02
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8
+
+// Editar tarea
+###
+PUT {{host}}/api/assignments/64571f49ad5d2280125d6e02
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8
+
+{
+  "title": "Primera entrega de requerimientos"
+}
+
+// Eliminar tarea
+###
+DELETE {{host}}/api/assignments/64571f49ad5d2280125d6e02
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8

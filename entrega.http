@@ -39,13 +39,13 @@ POST {{host}}/api/auth
 Content-Type: application/json
 
 {
-    "email": "luis.fernando@iteso.mx",
-    "password": "123456"
+    "email": "pedrogonzales@iteso.mx",
+    "password": "Pedro1"
 }
 
 ###
 GET {{host}}/api/groups
-x-auth: 
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTRhNTNmMmQ2M2E0MzA5MDIyZSIsImVtYWlsIjoibWF1cmljaW8ubm9yaWVnYUBpdGVzby5teCIsInVpZCI6IndrOHNTbU9Wa0s0c0FOa0Z0elVvdiIsInVzZXJ0eXBlIjoxLCJpYXQiOjE2ODM0Mjk3MDB9.FAYtM5Oa-U8y3yWlccYuveXb4BEDPuJQQcBE6pqHMXc
 
 ###
 GET {{host}}/api/groups/:groupId
@@ -65,13 +65,37 @@ x-auth:
 
 // Crear una tarea
 
-// Iniciar sesión como estudiante
+###
+POST {{host}}/api/assignments
+Content-Type: application/json
+x-auth: 
 
-// Ver las tareas
+{
+  "title": "Primera entrega de requerimientos",
+  "description": "Something",
+  "dueDate": "2023-06-16T04:59:00.000Z",
+  "rubricId": "" 
+}
+
+// Iniciar sesión como estudiante
+###
+POST {{host}}/api/auth
+Content-Type: application/json
+
+{
+    "email": "mauricio.noriega@iteso.mx",
+    "password": "123456"
+}
+
 
 // Ver una tarea
+###
+GET {{host}}/api/assignments/:id
+x-auth: 
 
 // Entregar la tarea 
+POST {{host}}/api/assignments/submit/:assignmentId
+x-auth:
 
 // Iniciar sesión como otro estudiante
 

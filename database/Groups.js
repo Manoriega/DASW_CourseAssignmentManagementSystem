@@ -169,7 +169,7 @@ groupSchema.statics.getAssignments = async (uid) => {
 
 let Groups = mongoose.model("groups", groupSchema);
 
-Groups.getGroups();
+//Groups.getGroups();
 
 //Groups.getGroupById("123456");
 
