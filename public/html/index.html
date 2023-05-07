@@ -85,7 +85,7 @@
       async function autoLogin() {
         let response = await AuthAPI.checkLog();
         if (response.status == 200) {
-          if (sessionStorage.getItem("usertype") < 3)
+          if (localStorage.getItem("usertype") < 3)
             window.location.replace("/home");
           else window.location.replace("/admin");
         }
@@ -116,7 +116,7 @@
             `userToken=${auth.token}; expires=` +
             expireDate.toUTCString() +
             "; path=/";
-          sessionStorage.setItem("usertype", auth.usertype);
+          localStorage.setItem("usertype", auth.usertype);
           if (auth.usertype == 3) window.location.replace("/admin");
           else window.location.replace("/home");
         } else if (response.status == 400) {

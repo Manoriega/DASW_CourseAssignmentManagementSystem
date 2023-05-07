@@ -22,7 +22,7 @@ router.get("/", isLogged, async (req, res) => {
   if (published) filters.published = published;
 
   try {
-    let user = await Users.getUserById(student.uid);
+    let user = await Users.getUserByUid(student.uid);
     let groups =
       user.usertype == 3
         ? await Groups.getGroups(filters)
@@ -116,6 +116,18 @@ router.get("/:id", isStudentOrTeacher, async (req, res) => {
   }
 });
 
+// Obtener estudiantes que no están en el grupo
+
+router.get("/:id/studentsToAdd", async (req, res) => {
+  try {
+    let students = await Users.studentsToAdd(req.params.id);
+    res.send(students);
+  } catch (e) {
+    res.status(400).send("An error has occurred");
+    console.log(e);
+  }
+});
+
 // Actualizar un grupo
 
 router.put("/:id", onlyAdmin, async (req, res) => {
@@ -169,44 +181,52 @@ router.get("/:id/students", isStudentOrTeacher, async (req, res) => {
 
 // Agregar estudiante a un grupo
 
-router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
-  try {
-    let groupId = req.params.groupId,
-      studentId = req.params.studentId;
-    let group = await Groups.getGroupById(groupId);
-    if (group) {
-      let student = await Users.getUserById(studentId);
-      if (student) {
-        await Groups.addStudent(groupId, studentId);
-        await Users.addGroup(studentId, groupId);
-        res.status(201).send(`Student added`);
-      } else res.status(404).send("Student not found");
-    } else res.status(404).send("Group not found");
-  } catch (e) {
-    res.status(400).send("An error has occurred");
-    console.log(e);
+router.post(
+  "/:groupId/student/:studentId",
+  teacherPermissions,
+  async (req, res) => {
+    try {
+      let groupId = req.params.groupId,
+        studentId = req.params.studentId;
+      let group = await Groups.getGroupById(groupId);
+      if (group) {
+        let student = await Users.getUserById(studentId);
+        if (student) {
+          await Groups.addStudent(groupId, studentId);
+          await Users.addGroup(studentId, groupId);
+          res.status(201).send(`Student added`);
+        } else res.status(404).send("Student not found");
+      } else res.status(404).send("Group not found");
+    } catch (e) {
+      res.status(400).send("An error has occurred");
+      console.log(e);
+    }
   }
-});
+);
 
 // Eliminar estudiante a un grupo
 
-router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
-  try {
-    let groupId = req.params.groupId,
-      studentId = req.params.studentId;
-    let group = await Groups.getGroupById(groupId);
-    if (group) {
-      let student = await Users.getUserById(studentId);
-      if (student) {
-        await Groups.removeStudent(groupId, studentId);
-        await Users.removeGroup(studentId, groupId);
-        res.status(201).send(`Student removed`);
-      } else res.status(404).send("Student not found");
-    } else res.status(404).send("Group not found");
-  } catch (e) {
-    res.status(400).send("An error has occurred");
-    console.log(e);
+router.delete(
+  "/:groupId/student/:studentId",
+  teacherPermissions,
+  async (req, res) => {
+    try {
+      let groupId = req.params.groupId,
+        studentId = req.params.studentId;
+      let group = await Groups.getGroupById(groupId);
+      if (group) {
+        let student = await Users.getUserById(studentId);
+        if (student) {
+          await Groups.removeStudent(groupId, studentId);
+          await Users.removeGroup(studentId, groupId);
+          res.status(201).send(`Student removed`);
+        } else res.status(404).send("Student not found");
+      } else res.status(404).send("Group not found");
+    } catch (e) {
+      res.status(400).send("An error has occurred");
+      console.log(e);
+    }
   }
-});
+);
 
 module.exports = router;

@@ -2,7 +2,7 @@ class AuthAPI {
   static url = "/api/auth";
 
   static logout() {
-    sessionStorage.removeItem("usertype");
+    localStorage.removeItem("usertype");
     document.cookie =
       "userToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.replace("/");
@@ -16,5 +16,10 @@ class AuthAPI {
   static async checkLog() {
     let response = await Request.get(this.url);
     return response;
+  }
+
+  static async changePassword(oldPassword, newPassword) {
+    let url = "/api/users/password";
+    return await Request.post(url, { oldPassword, newPassword });
   }
 }

@@ -54,4 +54,19 @@ class GroupsAPI {
     let url = "/api/users?usertype=2";
     return await Request.get(url);
   }
+
+  static async getUsersNotInGroup(id) {
+    let url = this.urlBase + `/${id}/studentsToAdd`;
+    return await Request.get(url);
+  }
+
+  static async addStudentToGroup(studentId, groupId) {
+    let url = this.urlBase + `/${groupId}/student/${studentId}`;
+    return await Request.post(url);
+  }
+
+  static async removeStudentToGroup(studentId, groupId) {
+    let url = this.urlBase + `/${groupId}/student/${studentId}`;
+    return await Request.delete(url);
+  }
 }
