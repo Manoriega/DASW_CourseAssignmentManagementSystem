@@ -1,7 +1,7 @@
 @groups = http://localhost:3000/api/groups
 @auth = http://localhost:3000/api/auth
 @users = http://localhost:3000/api/users
-@host = http://localhost:3000
+@host = http://localhost:3000/
 
 
 // GROUPS ============================================================================================================
@@ -13,13 +13,13 @@ x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ
 ###
 POST {{groups}}
 Content-Type: application/json
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgzMTM5OTkxfQ.Cep-i3iXa87rFR1l9kgiwBbohNE8VYn3XSHKmuVVUpU
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
 
 {
-    "title": "DESARROLLO DE APLICACIONES Y SERVICIOS WEB",
-    "code": "P2023_ESI3124F",
+    "title": "Innovación y emprendimiento",
+    "code": "P2023_EAM154E",
     "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
-    "teacher": "644c5c314ee26738959e3193"
+    "teacher": "nJybhHtnc1rOUMc9v5AS-"
 }
 
 ###
@@ -56,8 +56,114 @@ POST {{auth}}
 Content-Type: application/json
 
 {
-    "email": "admin@dasw.mx",
-    "password": "admin"
+    "email": "pedrogonzales@iteso.mx",
+    "password": "pedro"
+}
+
+###
+GET {{auth}}
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgyNzI2MTIzfQ.j-vW1IdJ8-e7Q8ORLBMaAfkceUC-0lagfaIP4nOSa7M
+
+
+// USERS ============================================================================================================
+
+###
+GET {{users}}
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
+
+###
+POST {{users}}
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
+
+{
+    "name": "Mauricio",
+    "lastname": "Noriega Monarrez",
+    "email": "pedrogonzales@iteso.mx",
+    "password": "pedro",
+    "usertype": 1
+}
+
+###
+GET {{users}}/123456
+
+###
+PUT {{users}}/Gwz1oL7UWXaDzcZhib_0c
+Content-Type: application/json
+
+{
+    "name": "Andrés"
+}
+
+###
+DELETE {{users}}/jK5tR0oHhfksEY5JKAwM7
+{    
+    "group_id": 1,
+    "rubric_id": 1,
+    "name": "Assignment name",
+    "description": "Description Description Description Description Description Description Description Description Description ",
+    "end_date": "2023-04-13"
+}
+
+###
+
+###
+PUT {{host}}/api/rubricas/TooQEK1Chl39SZu87BR-X
+Content-Type: application/json
+
+{
+    "preguntas": ["El contenido presentado tiene que ver con la tarea?", "El companero demuestra coherencia e interes en el tema?"],
+    "owner":"nerdinvader67@gmail.com",
+    "curso":"Requerimientos de software"
+}
+###
+POST {{groups}}
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
+
+{
+    "title": "Innovación y emprendimiento",
+    "code": "P2023_EAM154E",
+    "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
+    "teacher": "nJybhHtnc1rOUMc9v5AS-"
+}
+
+###
+PUT {{groups}}/H_k0LWyv/published
+
+###
+DELETE {{groups}}/H_k0LWyv/published
+
+###
+GET {{groups}}/lHPzKJSu
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgyNzI2MTIzfQ.j-vW1IdJ8-e7Q8ORLBMaAfkceUC-0lagfaIP4nOSa7M
+
+###
+PUT {{groups}}/H_k0LWyv
+Content-Type: application/json
+
+{
+    "title": "Innovación y emprendimiento"
+}
+
+###
+DELETE {{groups}}/H_k0LWyv
+
+###
+GET {{groups}}/H_k0LWyv/students
+
+###
+POST {{groups}}/H_k0LWyv/addStudent/123456
+
+// AUTH ============================================================================================================
+
+###
+POST {{auth}}
+Content-Type: application/json
+
+{
+    "email": "pedrogonzales@iteso.mx",
+    "password": "pedro"
 }
 
 ###

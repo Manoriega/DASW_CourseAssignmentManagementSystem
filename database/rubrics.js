@@ -6,6 +6,10 @@ const RubricSchema = mongoose.Schema({
         unique: true,
         required: true
     },
+    nombre:{
+        type: String,
+        required: true
+    },
     preguntas:{
         type: Object, 
         required: true
@@ -25,9 +29,16 @@ const RubricSchema = mongoose.Schema({
     }
 });
 
+RubricSchema.statics.getRubricaByEmail = async(owner) => 
+{
+    let doc = await Rubrica.find({owner});
+    console.log(doc);
+    return doc;
+}
+
 RubricSchema.statics.getRubricaById = async(uid) => 
 {
-    let doc = await Rubrica.findOne({uid});
+    let doc = await Rubrica.find({uid});
     console.log(doc);
     return doc;
 }
