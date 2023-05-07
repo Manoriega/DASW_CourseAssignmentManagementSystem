@@ -1,0 +1,82 @@
+@host = http://localhost:3000
+
+###
+POST {{host}}/api/auth
+Content-Type: application/json
+
+{
+    "email": "admin@dasw.mx",
+    "password": "admin"
+}
+
+###
+POST {{host}}/api/users
+Content-Type: application/json
+x-auth: 
+
+{
+    "name": "Luis",
+    "lastname": "Fernando",
+    "email": "luis.fernando@iteso.mx",
+    "password": "123456",
+    "usertype": 2
+}
+
+###
+POST {{host}}/api/groups
+Content-Type: application/json
+x-auth: 
+
+{
+    "title": "Programación Estructurada",
+    "code": "P2023_ESI1234F",
+    "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
+    "teacher": ""
+}
+
+###
+POST {{host}}/api/auth
+Content-Type: application/json
+
+{
+    "email": "luis.fernando@iteso.mx",
+    "password": "123456"
+}
+
+###
+GET {{host}}/api/groups
+x-auth: 
+
+###
+GET {{host}}/api/groups/:groupId
+x-auth: 
+
+###
+GET {{host}}/api/groups/:groupId/studentsToAdd
+x-auth: 
+
+###
+POST {{host}}/api/groups/:groupId/student/:studentId
+x-auth: 
+
+// Ver rúbricas
+
+// Crear una rúbrica
+
+// Crear una tarea
+
+// Iniciar sesión como estudiante
+
+// Ver las tareas
+
+// Ver una tarea
+
+// Entregar la tarea 
+
+// Iniciar sesión como otro estudiante
+
+// Evaluar la tarea de su compañero
+
+// (Como el profesor) Ver la entrega de la tarea
+
+// (Como el profesor) Asignar una calificación

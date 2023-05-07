@@ -10,7 +10,7 @@ const {
   isStudentOrTeacher,
 } = require("../middlewares");
 
-// Obtener todos los grupos a los que pertenece el estudiante o profesor
+// Obtener todos los grupos a los que pertenece el estudiante o profesor. O ver todos siendo administrador
 router.get("/", isLogged, async (req, res) => {
   let studentToken = req.get("x-auth"),
     student = jwt.decode(studentToken);
