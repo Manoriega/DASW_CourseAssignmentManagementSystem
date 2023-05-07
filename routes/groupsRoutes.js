@@ -189,10 +189,8 @@ router.post(
       let groupId = req.params.groupId,
         studentId = req.params.studentId;
       let group = await Groups.getGroupById(groupId);
-      console.log(group);
       if (group) {
         let student = await Users.getUserById(studentId);
-        console.log(student);
         if (student) {
           await Groups.addStudent(groupId, studentId);
           await Users.addGroup(studentId, groupId);

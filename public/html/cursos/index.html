@@ -97,7 +97,7 @@
                 <a href="/cursos/${group.uid}">${group.title}</a>
               </td>
               <td>${group.code}</td>
-              <td>${userTypes[`${sessionStorage.getItem("usertype")}`]}</td>
+              <td>${userTypes[`${localStorage.getItem("usertype")}`]}</td>
               <td>Si</td>
             </tr>
           `
@@ -107,7 +107,7 @@
             <tr>
               <td>${group.title}</td>
               <td>${group.code}</td>
-              <td>${userTypes[`${sessionStorage.getItem("usertype")}`]}</td>
+              <td>${userTypes[`${localStorage.getItem("usertype")}`]}</td>
               <td>No</td>
             </tr>
           `

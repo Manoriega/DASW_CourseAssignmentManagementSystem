@@ -577,7 +577,6 @@
         const formData = new FormData(userForm);
         const user = Object.fromEntries(formData.entries());
         if (modalType == "post") {
-          console.log(user);
           let password =
             user.name.charAt(0) +
             user.name.charAt(1) +

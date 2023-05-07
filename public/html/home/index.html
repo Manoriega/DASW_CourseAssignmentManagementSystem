@@ -43,8 +43,175 @@
         <a class="btn btn-primary btn-lg" href="/cursos" role="button"
           >Ir a mis cursos</a
         >
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          data-toggle="modal"
+          data-target="#changePasswordModal"
+        >
+          Cambiar contraseña
+        </button>
       </p>
     </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="changePasswordModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changePasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changePasswordModalLabel">
+              Cambiar contraseña
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="changePasswordForm">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="currentPassword">Contraseña actual</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    required
+                    class="form-control"
+                    id="currentPassword"
+                    placeholder="Ingrese su contraseña actual"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary toggle-password"
+                      type="button"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">Nueva contraseña</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$"
+                    required
+                    class="form-control"
+                    id="newPassword"
+                    placeholder="Ingrese su nueva contraseña"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary toggle-password"
+                      type="button"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="confirmNewPassword"
+                  >Confirmar nueva contraseña</label
+                >
+                <div class="input-group">
+                  <input
+                    type="password"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$"
+                    required
+                    class="form-control"
+                    id="confirmNewPassword"
+                    placeholder="Confirme su nueva contraseña"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary toggle-password"
+                      type="button"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p id="oldPasswordMsg" class="text-danger d-none">
+                La contraseña ingresada no es la actual
+              </p>
+              <p id="matchPasswordMsg" class="text-danger d-none">
+                Las contraseñas nuevas no coinciden
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="changePasswordButton"
+              >
+                Guardar cambios
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal to show success message -->
+    <div
+      class="modal fade"
+      id="passwordUpdateModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="passwordUpdateModal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="passwordUpdateModal-label">
+              Contraseña actualizada
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Su contraseña ha sido actualizada correctamente.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -62,9 +229,56 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../../js/request/index.js"></script>
     <script src="../../js/api/authapi.js"></script>
     <script>
-      if (!sessionStorage.getItem("usertype")) window.location.replace("/");
+      if (!localStorage.getItem("usertype")) window.location.replace("/");
+
+      // function to toggle password visibility
+      function togglePasswordVisibility() {
+        const passwordInput = $(this).closest(".input-group").find("input");
+        const passwordInputType = passwordInput.attr("type");
+        if (passwordInputType === "password") {
+          passwordInput.attr("type", "text");
+        } else {
+          passwordInput.attr("type", "password");
+        }
+        $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+      }
+
+      // add click event listener to all toggle password buttons
+      $(".toggle-password").click(togglePasswordVisibility);
+
+      let changePasswordForm = document.getElementById("changePasswordForm");
+      changePasswordForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let matchPasswordMsg = document.getElementById("matchPasswordMsg");
+        let oldPasswordMsg = document.getElementById("oldPasswordMsg");
+        matchPasswordMsg.classList.add("d-none");
+        oldPasswordMsg.classList.add("d-none");
+
+        if (confirmNewPassword.value != newPassword.value) {
+          matchPasswordMsg.classList.remove("d-none");
+          return;
+        } else {
+          let response = await AuthAPI.changePassword(
+            currentPassword.value,
+            newPassword.value
+          );
+          if (response.status == 200) {
+            $("#changePasswordModal").modal("hide");
+            $("#passwordUpdateModal").modal("show");
+          } else {
+            let data = await response.json();
+            if (data.status) oldPasswordMsg.classList.remove("d-none");
+            else {
+              $("#changePasswordModal").modal("hide");
+              alert("Ha ocurrido un error. Intenta más tarde");
+            }
+          }
+        }
+      });
     </script>
   </body>
 </html>

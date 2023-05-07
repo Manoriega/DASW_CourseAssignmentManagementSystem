@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const nanoid = require("nanoid");
+const jwt = require("jsonwebtoken");
 const { Users } = require("../database/Users");
 const { Groups } = require("../database/Groups");
-const { onlyAdmin } = require("../middlewares");
+const { onlyAdmin, isLogged } = require("../middlewares");
 
 // Ver todos los usuarios
 
@@ -59,6 +60,31 @@ router.post("/", onlyAdmin, async (req, res) => {
     let mongoResponse = await Users.createUser(newUser);
     res.status(201).send(mongoResponse);
   } catch (e) {
+    res.status(400).send("An error has occurred");
+    console.log(e);
+  }
+});
+
+// Cambiar contraseña
+router.post("/password", isLogged, async (req, res) => {
+  try {
+    let { oldPassword, newPassword } = req.body;
+    let studentToken = req.get("x-auth"),
+      student = jwt.decode(studentToken);
+    let user = await Users.getUserByEmail(student.email);
+    let userPassword = user.password;
+    bcrypt.compare(oldPassword, userPassword, async (err, okay) => {
+      if (okay) {
+        let encryptedPassword = bcrypt.hashSync(newPassword, 8);
+        let mongoResponse = await Users.updateUser(student.uid, {
+          password: encryptedPassword,
+        });
+        res.send("Password updated");
+      } else {
+        res.status(400).json({ status: 1 });
+      }
+    });
+  } catch (error) {
     res.status(400).send("An error has occurred");
     console.log(e);
   }

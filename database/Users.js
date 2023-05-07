@@ -1,4 +1,5 @@
 const { mongoose } = require("./connectdb");
+const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema({
   uid: {
@@ -78,7 +79,7 @@ userSchema.statics.getUserById = async (id) => {
 userSchema.statics.getUserByEmail = async (email) => {
   let user = await Users.findOne(
     { email },
-    { _id: 0, uid: 1, email: 1, password: 1, usertype: 1 }
+    { _id: 1, uid: 1, email: 1, password: 1, usertype: 1 }
   );
   return user;
 };
@@ -107,7 +108,6 @@ userSchema.statics.studentsToAdd = async (groupId) => {
     groups: { $nin: [groupId] },
     usertype: 1,
   });
-  console.log(usersToAdd);
   return usersToAdd;
 };
 

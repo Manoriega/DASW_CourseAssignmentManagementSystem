@@ -124,7 +124,7 @@
     <script src="../../../js/Request/index.js"></script>
     <script src="../../../js/api/groupsapi.js"></script>
     <script>
-      let usertype = sessionStorage.getItem("usertype");
+      let usertype = localStorage.getItem("usertype");
 
       async function removeStudent(studentId) {
         let url = window.location.href,

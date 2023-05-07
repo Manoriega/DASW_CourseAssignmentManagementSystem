@@ -549,11 +549,6 @@
           f_teacher = $("#f_teacher").val(),
           f_published = $("#published").is(":checked") ? "0" : "1";
 
-        console.log(f_title);
-        console.log(f_code);
-        console.log(f_teacher);
-        console.log(f_published);
-
         let groupsResponse = await GroupsAPI.getGroups(
             f_title,
             f_code,
