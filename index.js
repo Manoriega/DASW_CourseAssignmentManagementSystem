@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const { onlyAdminLogged } = require("./middlewares/index");
 
 const app = express();
-const port = proccess.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
