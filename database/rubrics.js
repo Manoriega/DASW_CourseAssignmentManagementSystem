@@ -16,7 +16,6 @@ const RubricSchema = mongoose.Schema({
     }, 
     owner:{
         type: String, 
-        unique: true, 
         required:true
     },
     curso:{
@@ -36,9 +35,22 @@ RubricSchema.statics.getRubricaByEmail = async(owner) =>
     return doc;
 }
 
+RubricSchema.statics.getTeacherRubricas = async (filters = {}) => {
+    let docs = await Rubrica.find(filters, {
+        _id: 0,
+        uid: 1,
+        nombre: 1, 
+        preguntas: 1,
+        owner: 1,
+        curso: 1, 
+        fecha: 1,
+    });
+    return docs; 
+};
+
 RubricSchema.statics.getRubricaById = async(uid) => 
 {
-    let doc = await Rubrica.find({uid});
+    let doc = await Rubrica.findOne({uid});
     console.log(doc);
     return doc;
 }

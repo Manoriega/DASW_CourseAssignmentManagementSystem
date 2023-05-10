@@ -23,7 +23,7 @@
     />
   </head>
   <body>
-    <div class="jumbotron">
+    <div class="jumbotron" id="homejumbotron">
       <div class="d-flex justify-content-end">
         <button class="btn btn-danger" onclick="AuthAPI.logout()">
           <i class="fas fa-sign-out-alt"></i>
@@ -51,6 +51,8 @@
         >
           Cambiar contraseña
         </button>
+        <a name="" id="rubricasbutton" class="btn btn-primary btn-lg" href="/rubricas" role="button">Ir a mis Rubricas</a>
+
       </p>
     </div>
 
@@ -233,6 +235,17 @@
     <script src="../../js/api/authapi.js"></script>
     <script>
       if (!localStorage.getItem("usertype")) window.location.replace("/");
+
+      function showRubricasButton()
+      {
+        let button = document.createElement("rubricasbutton");
+        if (localStorage.getItem("usertype") == 2)
+        {
+          button.style.display = "block";
+        }
+        else button.style.display = "none";
+      }
+      showRubricasButton();
 
       // function to toggle password visibility
       function togglePasswordVisibility() {
