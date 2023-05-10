@@ -1,9 +1,8 @@
+const dotenv = require("dotenv").config();
+
 let dbConfig = {
-  user: "mauricionoriega",
-  password: "y1TO6lZsnkj1gTxK",
-  dbName: "casym",
   dbUrl: function () {
-    return `mongodb+srv://${this.user}:${this.password}@cluster0.y7ljhau.mongodb.net/${this.dbName}?retryWrites=true&w=majority`;
+    return `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.y7ljhau.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
   },
 };
 

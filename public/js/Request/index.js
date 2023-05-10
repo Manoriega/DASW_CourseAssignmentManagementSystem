@@ -1,8 +1,11 @@
 class Request {
-  static async post(url, body) {
+  static async post(url, body = {}) {
     let response = null;
     try {
-      var userToken = "";
+      let userToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)userToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
       response = await fetch(url, {
         method: "POST",
         headers: {
@@ -21,7 +24,10 @@ class Request {
   static async get(url) {
     let response = null;
     try {
-      var userToken = "";
+      let userToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)userToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
       response = await fetch(url, {
         method: "GET",
         headers: {
@@ -36,10 +42,13 @@ class Request {
     return response;
   }
 
-  static async put(url, body) {
+  static async put(url, body = {}) {
     let response = null;
     try {
-      var userToken = "";
+      let userToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)userToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
       response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -55,10 +64,13 @@ class Request {
     return response;
   }
 
-  static async delete(url, body) {
+  static async delete(url, body = {}) {
     let response = null;
     try {
-      var userToken = "";
+      let userToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)userToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
       response = await fetch(url, {
         method: "DELETE",
         headers: {

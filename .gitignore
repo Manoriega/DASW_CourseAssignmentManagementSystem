@@ -8,5 +8,9 @@ node_modules/
 # uploads
 uploads/
 
+# tests
+tests/
+
 # Package-Lock
 package-lock.json
+testAPI.http

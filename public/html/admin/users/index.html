@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Usuarios - Administrador</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../../css/admin.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <nav
+          class="col-12 col-md-2 sidebar sidebar-sticky flex-column py-2"
+          style="background-color: black"
+        >
+          <h2 class="text-white"><a href="../">Administrador</a></h2>
+          <ul class="navbar-nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <i class="fas fa-users"></i> <strong>Usuarios</strong>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../groups/">
+                <i class="fas fa-users"></i> Grupos
+              </a>
+            </li>
+          </ul>
+          <button
+            class="btn btn-outline-light mt-auto"
+            type="button"
+            onclick="AuthAPI.logout()"
+          >
+            Logout
+          </button>
+        </nav>
+        <main role="main" class="col-md-10 ml-sm-auto bg-dark text-white p-4">
+          <h2>Usuarios</h2>
+          <div class="row">
+            <div class="col-sm-3 mb-3">
+              <label for="f_uid" class="form-label">Uid</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_uid"
+                name="f_uid"
+                onkeyup="getUsersL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_name" class="form-label">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_name"
+                name="f_name"
+                onkeyup="getUsersL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_lastname" class="form-label">Apellidos</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_lastname"
+                name="f_lastname"
+                onkeyup="getUsersL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_email" class="form-label">Email</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_email"
+                name="f_email"
+                onkeyup="getUsersL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_usertype" class="form-label">Tipo de Usuario</label>
+              <select
+                class="form-control"
+                id="f_usertype"
+                name="f_usertype"
+                onchange="getUsersL()"
+              >
+                <option value="">Seleccione una opción</option>
+                <option value="1">Estudiante</option>
+                <option value="2">Profesor</option>
+              </select>
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_group" class="form-label">Grupo</label>
+              <select
+                class="form-control"
+                id="f_group"
+                name="f_group"
+                onchange="getUsersL()"
+              >
+                <!-- opciones del select -->
+              </select>
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="categoriasPorPagina">Mostrar:</label>
+              <select class="form-control" id="categoriasPorPagina">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mb-2">
+            <button
+              class="btn btn-success"
+              data-toggle="modal"
+              data-target="#userModal"
+              onclick="crearUsuario()"
+            >
+              <i class="fas fa-plus-circle"></i> Nuevo
+            </button>
+          </div>
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Email</th>
+                <th>Tipo de usuario</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="usersList"></tbody>
+          </table>
+
+          <hr />
+          <div class="d-flex justify-content-between px-2">
+            <p id="textPagination">Mostrando 5 de 20 (1-5)</p>
+
+            <nav
+              aria-label="Page navigation example"
+              class="d-flex justify-content-end"
+            >
+              <ul
+                id="usersPagination"
+                class="pagination justify-content-center"
+              ></ul>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="userModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modelTitleId"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content modal-dark">
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title text-light" id="modalTitle">
+              Crear usuario
+            </h5>
+            <button
+              type="button"
+              class="close text-light"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="userForm" method="POST">
+            <div class="modal-body bg-dark">
+              <div class="form-group">
+                <label for="name" class="form-label text-light">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="lastname" class="form-label text-light"
+                  >Apellidos</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  name="lastname"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label text-light">Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="usertype" class="form-label text-light"
+                  >Tipo de usuario</label
+                >
+                <select
+                  class="form-control"
+                  id="usertype"
+                  name="usertype"
+                  required
+                >
+                  <option value="">Seleccione una categoría</option>
+                  <option value="1">Estudiante</option>
+                  <option value="2">Profesor</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer bg-dark">
+              <button
+                type="button"
+                class="btn btn-danger text-light"
+                data-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../../js/Request/index.js"></script>
+    <script src="../../../js/api/usersapi.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script src="../../../js/api/authapi.js"></script>
+    <script>
+      let modalType = "post",
+        userId = 0,
+        users = [],
+        currentPage = 1,
+        pages = 0,
+        view = 5,
+        allGroups = [],
+        maxButtons = 5,
+        startUser = 1,
+        endUser = 5,
+        userTypes = {
+          1: "Estudiante",
+          2: "Profesor",
+          3: "Administrador",
+        };
+
+      function firstPage() {
+        loadUsers(1);
+      }
+
+      function lastPage() {
+        loadUsers(pages);
+      }
+
+      function nextPage() {
+        loadUsers(currentPage + 1);
+      }
+
+      function previousPage() {
+        loadUsers(currentPage - 1);
+      }
+
+      function calcularCantidadDePaginas(total) {
+        const cantidadDePaginas = Math.ceil(total / view);
+        return cantidadDePaginas;
+      }
+
+      function cambiarView(newView) {
+        view = newView;
+        loadUsers(1);
+      }
+
+      function setPagination(usersL) {
+        let pagesNum = calcularCantidadDePaginas(usersL.length),
+          pagesLinks = "",
+          startPage,
+          endPage;
+        pages = pagesNum;
+
+        if (pages <= 0) {
+          textPagination.innerText = `Mostrando 0 de 0`;
+          usersPagination.innerHTML =
+            '<li id="firstButtonLi" class="page-item"><button id="firstButton" class="page-link" onclick="firstPage()" aria-label="First"> <i class="fa fa-angle-double-left" aria-hidden="true"></i> </button></li>' +
+            '<li id="previousButtonLi" class="page-item"><button id="previousButton" class="page-link" onclick="previousPage()" aria-label="Previous"> <i class="fa fa-angle-left" aria-hidden="true"></i> </button></li>' +
+            '<li class="page-item"><button onclick="loadUsers(1)" class="page-link">1</button></li>' +
+            '<li id="nextButtonLi" class="page-item"><button id="nextButton" class="page-link" onclick="nextPage()" aria-label="Next"> <i class="fa fa-angle-right" aria-hidden="true"></i> </button></li>' +
+            '<li id="lastButtonLi" class="page-item"><button id="lastButton" class="page-link" onclick="lastPage()" aria-label="Last"> <i class="fa fa-angle-double-right" aria-hidden="true"></i> </button></li>';
+          users = usersL;
+          pages = 1;
+          return;
+        }
+
+        if (pages <= maxButtons) {
+          startPage = 1;
+          endPage = pages;
+        } else {
+          const halfMaxButtons = Math.floor(maxButtons / 2);
+          startPage = currentPage - halfMaxButtons;
+          endPage = currentPage + halfMaxButtons;
+        }
+
+        if (startPage < 1) {
+          startPage = 1;
+          endPage = maxButtons;
+        } else if (endPage > pages) {
+          endPage = pages;
+          startPage = pages - maxButtons + 1;
+        }
+
+        textPagination.innerText = `Mostrando ${
+          view < usersL.length ? view : usersL.length
+        } de ${usersL.length} (${startUser + 1} - ${
+          endUser > usersL.length ? usersL.length : endUser
+        })`;
+
+        for (let i = startPage; i <= endPage; i++) {
+          let link = `<li class="page-item"><button onclick="loadUsers(${i})" class="page-link">${i}</button></li>`;
+          pagesLinks += link;
+        }
+
+        usersPagination.innerHTML =
+          '<li id="firstButtonLi" class="page-item"><button id="firstButton" class="page-link" onclick="firstPage()" aria-label="First"> <i class="fa fa-angle-double-left" aria-hidden="true"></i> </button></li>' +
+          '<li id="previousButtonLi" class="page-item"><button id="previousButton" class="page-link" onclick="previousPage()" aria-label="Previous"> <i class="fa fa-angle-left" aria-hidden="true"></i> </button></li>' +
+          pagesLinks +
+          '<li id="nextButtonLi" class="page-item"><button id="nextButton" class="page-link" onclick="nextPage()" aria-label="Next"> <i class="fa fa-angle-right" aria-hidden="true"></i> </button></li>' +
+          '<li id="lastButtonLi" class="page-item"><button id="lastButton" class="page-link" onclick="lastPage()" aria-label="Last"> <i class="fa fa-angle-double-right" aria-hidden="true"></i> </button></li>';
+        users = usersL;
+      }
+
+      function cleanInputs() {
+        $("#name").val("");
+        $("#name").prop("disabled", false);
+
+        lastname.value = "";
+        lastname.disabled = false;
+
+        email.value = "";
+        email.disabled = false;
+
+        usertype.value = "";
+        usertype.disabled = false;
+      }
+
+      function setFormInputs(user, disabled) {
+        $("#name").val(user.name);
+        $("#name").prop("disabled", disabled);
+
+        lastname.value = user.lastname;
+        lastname.disabled = disabled;
+
+        email.value = user.email;
+        email.disabled = disabled;
+
+        $("#usertype").val(user.usertype).trigger("change");
+        $("#usertype").prop("disabled", disabled);
+      }
+
+      function crearUsuario() {
+        modalType = "post";
+        modalTitle.innerText = "Crear usuario";
+        cleanInputs();
+        const formulario = document.getElementById("userForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.remove("d-none");
+      }
+
+      async function viewUser(id) {
+        modalType = "";
+        modalTitle.innerText = "Ver usuario";
+        cleanInputs();
+        const formulario = document.getElementById("userForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.add("d-none");
+
+        let userResponse = await UsersAPI.getUser(id),
+          user = await userResponse.json();
+        setFormInputs(user, true);
+      }
+
+      async function editUser(id) {
+        userId = id;
+        modalType = "put";
+        modalTitle.innerText = "Editar Usuario";
+        cleanInputs();
+        let formulario = document.getElementById("userForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.remove("d-none");
+        let userResponse = await UsersAPI.getUser(id),
+          user = await userResponse.json();
+        setFormInputs(user, false);
+      }
+
+      async function loadGroups() {
+        let groupsResponse = await GroupsAPI.getGroups(),
+          groups = await groupsResponse.json();
+        allGroups = groups;
+        f_group.innerHTML =
+          '<option value="">Selecciona una opción</option>' +
+          groups
+            .map(
+              (group) => `<option value="${group.uid}">${group.title}</option>`
+            )
+            .join("");
+
+        getUsersL();
+      }
+
+      async function deleteUser(id) {
+        await UsersAPI.deleteUser(id);
+        getUsersL();
+      }
+
+      function loadUsers(page) {
+        currentPage = page;
+        startUser = page * view - view;
+        endUser = page * view;
+        setPagination(users);
+        let slice = users.slice(startUser, endUser);
+        usersList.innerHTML = slice
+          .map(
+            (user) =>
+              `
+              <tr>                
+                <td>${user.name}</td>
+                <td>${user.lastname}</td>
+                <td>${user.email}</td>
+                <td>${userTypes[`${user.usertype}`]}</td>
+                <td>
+                  ${
+                    user.usertype != 3
+                      ? `<div class="d-flex">
+                    <button
+                      class="btn btn-secondary mr-2"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#userModal"
+                      title="Ver usuario"
+                      onclick="viewUser('${user.uid}')"
+                    >
+                      <i class="fas fa-search"></i>
+                    </button>
+                    <button
+                      class="btn btn-info mr-2"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#userModal"
+                      title="Editar usuario"
+                      onclick="editUser('${user.uid}')"
+                    >
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      type="button"
+                      title="Eliminar usuario"
+                      onclick="deleteUser('${user.uid}')"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>`
+                      : ""
+                  }                  
+                </td>
+              </tr>
+        `
+          )
+          .join("");
+        const lista = document.getElementById("usersPagination");
+        const items = lista.getElementsByTagName("li");
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].textContent.trim() === page.toString()) {
+            items[i].classList.add("active");
+          } else {
+            items[i].classList.remove("active");
+          }
+        }
+
+        if (currentPage == 1) {
+          firstButtonLi.classList.add("disabled");
+          previousButtonLi.classList.add("disabled");
+          previousButton.disabled = true;
+          firstButton.disabled = true;
+        } else {
+          firstButtonLi.classList.remove("disabled");
+          previousButtonLi.classList.remove("disabled");
+          previousButton.disabled = false;
+          firstButton.disabled = false;
+        }
+        if (currentPage == pages) {
+          nextButtonLi.classList.add("disabled");
+          nextButton.disabled = true;
+          lastButtonLi.classList.add("disabled");
+          lastButton.disabled = true;
+        } else {
+          nextButtonLi.classList.remove("disabled");
+          nextButton.disabled = false;
+          lastButtonLi.classList.remove("disabled");
+          lastButton.disabled = false;
+        }
+      }
+
+      async function getUsersL() {
+        let f_uid = $("#f_uid").val(),
+          f_name = $("#f_name").val(),
+          f_lastname = $("#f_lastname").val(),
+          f_email = $("#f_email").val(),
+          f_usertype = $("#f_usertype").val(),
+          f_group = $("#f_group").val();
+
+        let usersResponse = await UsersAPI.getUsers(
+            f_uid,
+            f_name,
+            f_lastname,
+            f_email,
+            f_usertype,
+            f_group
+          ),
+          usersJSON = await usersResponse.json();
+        users = usersJSON;
+        loadUsers(1);
+      }
+
+      loadGroups();
+
+      let userForm = document.getElementById("userForm");
+      userForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(userForm);
+        const user = Object.fromEntries(formData.entries());
+        if (modalType == "post") {
+          let password =
+            user.name.charAt(0) +
+            user.name.charAt(1) +
+            user.lastname.charAt(0) +
+            user.lastname.charAt(1) +
+            new Date().getFullYear();
+          user.password = password;
+        }
+        let response =
+          modalType == "post"
+            ? await UsersAPI.createUser(user)
+            : modalType == "put"
+            ? await UsersAPI.updateUser(userId, user)
+            : {};
+        cleanInputs();
+        getUsersL();
+        $("#userModal").modal("hide");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+@media (min-width: 768px) {
+  .sidebar {
+    height: 100vh;
+  }
+}
+
+.sidebar .nav-link {
+  font-size: 0.9rem;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+a {
+  color: white;
+}
+
+main {
+  height: auto; /* Modificación */
+  min-height: calc(100vh - 56px); /* Modificación */
+}
+
+hr {
+  border-color: white;
+}

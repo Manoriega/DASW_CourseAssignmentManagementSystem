@@ -22,6 +22,12 @@
       integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
       crossorigin="anonymous"
     />
+
+    <style>
+      p {
+        margin-bottom: 0px;
+      }
+    </style>
   </head>
   <body>
     <nav aria-label="breadcrumb">
@@ -32,76 +38,56 @@
         <li class="breadcrumb-item active" aria-current="page">Tareas</li>
       </ol>
     </nav>
-    <div class="px-3">
+    <div class="px-3 pb-5">
       <h1>Tareas</h1>
       <div class="mb-5">
         <div id="createAssignmentBtn" class="d-flex justify-content-end">
-          <a class="btn btn-outline-success" href="/cursos/1/tareas/crear"
+          <a class="btn btn-outline-success" id="createAssignmentLink"
             ><i class="fas fa-plus-circle"></i> Crear
           </a>
         </div>
 
         <div class="row">
           <div class="col-md-3">
-            <label for="name">Nombre</label>
-            <input type="text" class="form-control" id="name" />
+            <label for="f_title">Nombre</label>
+            <input
+              onkeyup="loadAssignments()"
+              type="text"
+              class="form-control"
+              id="f_title"
+            />
           </div>
           <div class="col-md-3">
-            <label for="start_date">Fecha desde</label>
-            <input type="date" class="form-control" id="start_date" />
+            <label for="f_dateStart">Fecha desde</label>
+            <input
+              onchange="loadAssignments()"
+              type="date"
+              class="form-control"
+              id="f_dateStart"
+            />
           </div>
           <div class="col-md-3">
-            <label for="end_date">Fecha hasta</label>
-            <input type="date" class="form-control" id="end_date" />
+            <label for="f_dateEnd">Fecha hasta</label>
+            <input
+              onchange="loadAssignments()"
+              type="date"
+              class="form-control"
+              id="f_dateEnd"
+            />
           </div>
-          <div class="col-md-3">
+          <div id="typeFilter" class="col-md-3 d-none">
             <label for="type">Tipo</label>
             <select class="form-control" id="type">
               <option value="">Seleccione una opción</option>
               <option value="1">Por entregar</option>
-              <option value="1">Por evaluar</option>
               <option value="2">Entregado</option>
+              <option value="3">Por evaluar</option>
             </select>
           </div>
         </div>
       </div>
       <div>
-        <div id="allAssignmentsContainer">
-          <div id="assignments">
-            <div class="card my-5 p-3">
-              <h5>Nombre de la tarea</h5>
-              <p>Fecha de entrega: 2023/05/12</p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequatur, accusantium veniam delectus sit nihil est totam
-                minus reprehenderit possimus voluptate! Debitis deserunt
-                inventore consequuntur similique nostrum distinctio illo saepe
-                animi temporibus, dolorem architecto expedita. Sequi.
-              </p>
-              <div class="d-flex justify-content-end column">
-                <a href="/cursos/1/tareas/1" class="btn btn-outline-primary">
-                  <i class="fas fa-envelope"></i> Entregar
-                </a>
-              </div>
-            </div>
-            <div class="card my-5 p-3">
-              <h5>Nombre de la tarea</h5>
-              <p>Fecha de entrega: 2023/05/12</p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequatur, accusantium veniam delectus sit nihil est totam
-                minus reprehenderit possimus voluptate! Debitis deserunt
-                inventore consequuntur similique nostrum distinctio illo saepe
-                animi temporibus, dolorem architecto expedita. Sequi.
-              </p>
-              <div class="d-flex justify-content-end column">
-                <a href="/cursos/1/tareas/1" class="btn btn-outline-primary">
-                  <i class="fas fa-envelope"></i> Entregar
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="assignmentsList"></div>
       </div>
     </div>
     <!-- Optional JavaScript -->
@@ -122,5 +108,198 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../../../js/common/index.js"></script>
+    <script src="../../../js/request/index.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script src="../../../js/api/assignmentsapi.js"></script>
+    <script>
+      let usertype = localStorage.getItem("usertype");
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        codigo = partesURL[partesURL.length - 3];
+
+      let typeSelect = document.getElementById("type");
+      let createAssignmentBtn = document.getElementById("createAssignmentBtn");
+      if (usertype == 1) {
+        typeFilter.classList.remove("d-none");
+        createAssignmentBtn.classList.remove("d-flex");
+        createAssignmentBtn.classList.add("d-none");
+      }
+      typeSelect.addEventListener("change", async (e) => {
+        e.preventDefault();
+        let type = typeSelect.value;
+        if (type == 1) loadAssignments();
+        else if (type == 2) loadEntries();
+        else loadToReview();
+      });
+
+      async function loadEntries() {
+        let assignmentsResponse = await AssignmentsAPI.getMyAssignmentsDone(
+          codigo
+        );
+        if (assignmentsResponse.status == 200) {
+          let assignments = await assignmentsResponse.json();
+          assignmentsList.innerHTML =
+            assignments.length > 0
+              ? assignments
+                  .map(
+                    (assignment) => `
+            <div class="card my-5 p-3">
+              <h5>${assignment.assignmentId.title}</h5>
+              <p><b>Fecha de entregado:</b> ${formatDate(
+                assignment.creationDate
+              )}</p>              
+              ${
+                assignment.finalScore
+                  ? `<p><b>Calificación final:</b> ${assignment.finalScore}</p>`
+                  : ""
+              }
+              <p>
+                ${assignment.assignmentId.description}
+              </p>
+              <div class="d-flex justify-content-end column">
+                <a href="/cursos/${codigo}/tareas/${
+                      assignment.assignmentId._id
+                    }/entregas/${
+                      assignment._id
+                    }" class="btn btn-outline-success">
+                  <i class="fas fa-envelope-open"></i> Ver Entrega
+                </a>
+              </div>
+            </div>`
+                  )
+                  .join("")
+              : '<h2 class="text-center">No hay tareas entregadas</h2>';
+        } else if (assignmentsResponse.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadToReview() {
+        let response = await AssignmentsAPI.assignmentsToReview(codigo);
+        if (response.status == 200) {
+          let entregas = await response.json();
+          assignmentsList.innerHTML =
+            entregas.length > 0
+              ? entregas
+                  .map(
+                    (entrega) => `
+            <div class="card my-5 p-3">
+              <h5>${entrega.assignmentId.title}</h5>
+              <div class="d-flex justify-content-end column">
+                <a href="/cursos/${codigo}/tareas/${entrega.assignmentId._id}/entregas/${entrega._id}/evaluar" class="btn btn-outline-success">
+                  <i class="fas fa-envelope"></i> Evaluar
+                </a>
+              </div>
+            </div>`
+                  )
+                  .join("")
+              : '<h2 class="text-center">No tienes tareas por evaluar</h2>';
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadAssignments() {
+        $("#type").val(1).trigger("change");
+        let title = f_title.value,
+          dateStart = f_dateStart.value,
+          dateEnd = f_dateEnd.value;
+        let assignmentsResponse = await AssignmentsAPI.getMyAssignments(
+            codigo,
+            title,
+            dateStart,
+            dateEnd
+          ),
+          fecha = new Date(),
+          currentDate = fecha.toISOString();
+        if (assignmentsResponse.status == 200) {
+          let assignments = await assignmentsResponse.json();
+          if (usertype == 2)
+            assignmentsList.innerHTML =
+              assignments.length > 0
+                ? assignments
+                    .map((assignment) => {
+                      return `
+            <div class="card my-5 p-3">
+              <h5><a href="${`/cursos/${codigo}/tareas/${assignment._id}`}" ${
+                        assignment.dueDate < currentDate
+                          ? "class='text-danger'"
+                          : ""
+                      }>${assignment.title}</a></h5>
+              <p><b>Fecha de entrega:</b> ${formatDate(assignment.dueDate)}</p>
+              <p>
+                ${assignment.description}
+              </p>
+              <div class="d-flex justify-content-end column">
+                <a href="/cursos/${codigo}/tareas/${
+                        assignment._id
+                      }/entregas" class="btn btn-outline-primary">
+                  <i class="fas fa-envelope"></i> Ver entregas
+                </a>
+              </div>
+            </div>`;
+                    })
+                    .join("")
+                : '<h2 class="text-center">No hay tareas registradas</h2>';
+          else
+            assignmentsList.innerHTML =
+              assignments.length > 0
+                ? assignments
+                    .map(
+                      (assignment) => `
+            <div class="card my-5 p-3">
+              <h5 ${
+                assignment.dueDate < currentDate ? "class='text-danger'" : ""
+              }>${assignment.title}</h5>
+              <p><b>Fecha de entrega:</b> ${formatDate(assignment.dueDate)}</p>
+              <p>
+                ${assignment.description}
+              </p>
+              ${
+                assignment.dueDate > currentDate
+                  ? `<div class="d-flex justify-content-end column">
+                <a href="/cursos/${codigo}/tareas/${assignment._id}" class="btn btn-outline-primary">
+                  <i class="fas fa-envelope"></i> Entregar
+                </a>
+              </div>`
+                  : ""
+              }              
+            </div>`
+                    )
+                    .join("")
+                : '<h2 class="text-center">No tienes tareas por realizar</h2>';
+        } else if (assignmentsResponse.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadGroup() {
+        let response = await GroupsAPI.getGroup(codigo);
+        if (response.status == 200) {
+          let group = await response.json();
+          courseLink.innerText = group.title;
+          courseLink.href = `/cursos/${group.uid}`;
+          createAssignmentLink.href = `/cursos/${group.uid}/tareas/crear`;
+          loadAssignments(codigo);
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      loadGroup();
+    </script>
   </body>
 </html>

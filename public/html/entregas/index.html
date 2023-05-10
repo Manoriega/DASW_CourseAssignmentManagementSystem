@@ -42,35 +42,43 @@
         </li>
       </ol>
     </nav>
-    <div class="px-3">
+    <div class="px-3 pb-5">
       <h1>Entregas</h1>
-      <div class="d-flex justify-content-end">
-        <button id="downloadEntriesLink" class="btn btn-outline-primary">
-          <i class="fas fa-download"></i> Descargar entregas
-        </button>
-      </div>
-      <div id="assignmentEntries">
-        <div class="card my-5 p-3">
-          <h5>Nombre de la tarea</h5>
-          <p><b>Fecha de entregado:</b> 2023/05/12</p>
-          <p><b>Entregado por:</b> Mauricio Noriega Monarrez</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Consequatur, accusantium veniam delectus sit nihil est totam minus
-            reprehenderit possimus voluptate! Debitis deserunt inventore
-            consequuntur similique nostrum distinctio illo saepe animi
-            temporibus, dolorem architecto expedita. Sequi.
-          </p>
-          <div class="d-flex justify-content-end column">
-            <a
-              href="/cursos/1/tareas/1/entregas/1"
-              class="btn btn-outline-success"
-            >
-              Ver entrega
-            </a>
-          </div>
+      <div class="row mb-2">
+        <div class="col-md-3">
+          <label for="f_studentDeliver">Entrega de</label>
+          <input
+            onkeyup="loadEntries()"
+            type="text"
+            class="form-control"
+            id="f_studentDeliver"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="f_dateStart">Fecha desde</label>
+          <input
+            onchange="loadEntries()"
+            type="date"
+            class="form-control"
+            id="f_dateStart"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="f_dateEnd">Fecha hasta</label>
+          <input
+            onchange="loadEntries()"
+            type="date"
+            class="form-control"
+            id="f_dateEnd"
+          />
         </div>
       </div>
+      <div class="d-flex justify-content-end">
+        <a id="downloadEntriesLink" class="btn btn-primary text-white">
+          <i class="fas fa-download"></i> Descargar entregas
+        </a>
+      </div>
+      <div id="assignmentEntriesList"></div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -90,5 +98,93 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="/public/js/common/index.js"></script>
+    <script src="/public/js/request/index.js"></script>
+    <script src="/public/js/api/assignmentsapi.js"></script>
+    <script src="/public/js/api/groupsapi.js"></script>
+    <script>
+      let usertype = localStorage.getItem("usertype");
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        groupId = partesURL[partesURL.length - 5],
+        assignmentId = partesURL[partesURL.length - 3];
+
+      async function loadEntries() {
+        let studentDeliver = f_studentDeliver.value,
+          dateStart = f_dateStart.value,
+          dateEnd = f_dateEnd.value;
+        let response = await AssignmentsAPI.getAllEntries(
+          assignmentId,
+          studentDeliver,
+          dateStart,
+          dateEnd
+        );
+        if (response.status == 200) {
+          let entries = await response.json();
+          assignmentEntriesList.innerHTML = entries
+            .map(
+              (entry) => `
+              <div class="card my-5 p-3">
+                <h5><a
+                    href="/cursos/${groupId}/tareas/${assignmentId}/entregas/${
+                entry._id
+              }">${entry.assignmentId.title}</a></h5>
+                <p class="mb-0"><b>Fecha de entregado:</b> ${formatDate(
+                  entry.creationDate
+                )}</p>
+                <p class="mb-0"><b>Entregado por:</b> ${
+                  entry.studentDeliver.name
+                } ${entry.studentDeliver.lastname}</p>                
+                ${
+                  entry.finalScore
+                    ? `<p class="mb-0"><b>Calificación final:</b> ${entry.finalScore}</p>                `
+                    : ""
+                }
+                <div class="d-flex justify-content-end column">
+                  <a
+                    href="/cursos/${groupId}/tareas/${assignmentId}/entregas/${
+                entry._id
+              }"
+                    class="btn btn-outline-success"
+                  >
+                    Ver entrega
+                  </a>
+                </div>
+              </div>
+            `
+            )
+            .join("");
+        } else {
+          window.location.replace("/home");
+        }
+      }
+
+      async function loadAssignment() {
+        let response = await AssignmentsAPI.getAssignment(assignmentId);
+        if (response.status == 200) {
+          let assignment = await response.json();
+          assignmentLink.innerText = assignment.title;
+          loadEntries();
+        } else {
+          window.location.replace("/home");
+        }
+      }
+
+      async function loadGroup() {
+        let response = await GroupsAPI.getGroup(groupId);
+        if (response.status == 200) {
+          let group = await response.json();
+          courseLink.innerText = group.title;
+          courseLink.href = `/cursos/${group.uid}`;
+          assignmentsLink.href = `/cursos/${group.uid}/tareas`;
+          assignmentLink.href = `/cursos/${groupId}/tareas/${assignmentId}`;
+          downloadEntriesLink.href = `/api/assignments/download/all/${assignmentId}`;
+          loadAssignment();
+        } else {
+          window.location.replace("/home");
+        }
+      }
+      loadGroup();
+    </script>
   </body>
 </html>

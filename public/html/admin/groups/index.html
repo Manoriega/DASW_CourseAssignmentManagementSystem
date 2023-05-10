@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Grupos - Administrador</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../../css/admin.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <nav
+          class="col-12 col-md-2 sidebar sidebar-sticky flex-column py-2"
+          style="background-color: black"
+        >
+          <h2 class="text-white"><a href="../">Administrador</a></h2>
+          <ul class="navbar-nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="../users">
+                <i class="fas fa-users"></i> Usuarios
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <i class="fas fa-users"></i> <strong>Grupos</strong>
+              </a>
+            </li>
+          </ul>
+          <button
+            class="btn btn-outline-light mt-auto"
+            type="button"
+            onclick="AuthAPI.logout()"
+          >
+            Logout
+          </button>
+        </nav>
+        <main role="main" class="col-md-10 ml-sm-auto bg-dark text-light">
+          <h2>Grupos</h2>
+          <div class="row">
+            <div class="col-sm-3 mb-3">
+              <label for="f_title" class="form-label">Titulo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_title"
+                name="f_title"
+                onkeyup="getGroupsL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_code" class="form-label">Código</label>
+              <input
+                type="text"
+                class="form-control"
+                id="f_code"
+                name="f_code"
+                onkeyup="getGroupsL()"
+              />
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="f_teacher" class="form-label">Maestro</label>
+              <select
+                class="form-control"
+                id="f_teacher"
+                name="f_teacher"
+                onchange="getGroupsL()"
+              >
+                <option value="">Seleccione una opción</option>
+              </select>
+            </div>
+            <div class="col-sm-3 mb-3">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="published"
+                    name="Inactivos"
+                    value="1"
+                    onchange="getGroupsL()"
+                  />
+                  <span class="form-check-sign"></span>
+                  Ver inactivos
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-3 mb-3">
+              <label for="categoriasPorPagina">Mostrar:</label>
+              <select class="form-control" id="categoriasPorPagina">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mb-2">
+            <button
+              class="btn btn-success"
+              data-toggle="modal"
+              data-target="#groupModal"
+              onclick="createGroup()"
+            >
+              <i class="fas fa-plus-circle"></i> Nuevo
+            </button>
+          </div>
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th>Maestro</th>
+                <th>Publicado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="groupsList"></tbody>
+          </table>
+
+          <hr />
+          <div class="d-flex justify-content-between px-2">
+            <p id="textPagination">Mostrando 5 de 20 (1-5)</p>
+
+            <nav
+              aria-label="Page navigation example"
+              class="d-flex justify-content-end"
+            >
+              <ul
+                id="groupsPagination"
+                class="pagination justify-content-center"
+              ></ul>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="groupModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modelTitleId"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content modal-dark">
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title text-light" id="modalTitle">Crear grupo</h5>
+            <button
+              type="button"
+              class="close text-light"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="groupForm" method="POST">
+            <div class="modal-body bg-dark">
+              <div class="form-group">
+                <label for="title" class="form-label text-light">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="code" class="form-label text-light">Código</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="code"
+                  name="code"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="information" class="form-label text-light"
+                  >Descripción</label
+                >
+                <textarea
+                  class="form-control"
+                  name="information"
+                  id="information"
+                  rows="5"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="teacher" class="form-label text-light"
+                  >Maestro</label
+                >
+                <select
+                  type="text"
+                  class="form-control"
+                  id="teacher"
+                  name="teacher"
+                  required
+                ></select>
+              </div>
+            </div>
+            <div class="modal-footer bg-dark">
+              <button
+                type="button"
+                class="btn btn-danger text-light"
+                data-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../../js/Request/index.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script src="../../../js/api/authapi.js"></script>
+    <script>
+      let modalType = "post",
+        groupId = 0,
+        groups = [],
+        teachers = [],
+        currentPage = 1,
+        pages = 0,
+        view = 5,
+        maxButtons = 5,
+        startGroup = 1,
+        endGroup = 5;
+
+      function firstPage() {
+        loadGroups(1);
+      }
+
+      function lastPage() {
+        loadGroups(pages);
+      }
+
+      function nextPage() {
+        loadGroups(currentPage + 1);
+      }
+
+      function previousPage() {
+        loadGroups(currentPage - 1);
+      }
+
+      function calcularCantidadDePaginas(total) {
+        const cantidadDePaginas = Math.ceil(total / view);
+        return cantidadDePaginas;
+      }
+
+      function cambiarView(newView) {
+        view = newView;
+        loadGroups(1);
+      }
+      function setPagination(groupsL) {
+        let pagesNum = calcularCantidadDePaginas(groupsL.length),
+          pagesLinks = "",
+          startPage,
+          endPage;
+        pages = pagesNum;
+
+        if (pages <= 0) {
+          textPagination.innerText = `Mostrando 0 de 0`;
+          groupsPagination.innerHTML =
+            '<li id="firstButtonLi" class="page-item"><button id="firstButton" class="page-link" onclick="firstPage()" aria-label="First"> <i class="fa fa-angle-double-left" aria-hidden="true"></i> </button></li>' +
+            '<li id="previousButtonLi" class="page-item"><button id="previousButton" class="page-link" onclick="previousPage()" aria-label="Previous"> <i class="fa fa-angle-left" aria-hidden="true"></i> </button></li>' +
+            '<li class="page-item"><button onclick="loadGroups(1)" class="page-link">1</button></li>' +
+            '<li id="nextButtonLi" class="page-item"><button id="nextButton" class="page-link" onclick="nextPage()" aria-label="Next"> <i class="fa fa-angle-right" aria-hidden="true"></i> </button></li>' +
+            '<li id="lastButtonLi" class="page-item"><button id="lastButton" class="page-link" onclick="lastPage()" aria-label="Last"> <i class="fa fa-angle-double-right" aria-hidden="true"></i> </button></li>';
+          groups = groupsL;
+          pages = 1;
+          return;
+        }
+
+        if (pages <= maxButtons) {
+          startPage = 1;
+          endPage = pages;
+        } else {
+          const halfMaxButtons = Math.floor(maxButtons / 2);
+          startPage = currentPage - halfMaxButtons;
+          endPage = currentPage + halfMaxButtons;
+        }
+
+        if (startPage < 1) {
+          startPage = 1;
+          endPage = maxButtons;
+        } else if (endPage > pages) {
+          endPage = pages;
+          startPage = pages - maxButtons + 1;
+        }
+
+        textPagination.innerText = `Mostrando ${
+          view < groupsL.length ? view : groupsL.length
+        } de ${groupsL.length} (${startGroup + 1} - ${
+          endGroup > groupsL.length ? groupsL.length : endGroup
+        })`;
+
+        for (let i = startPage; i <= endPage; i++) {
+          let link = `<li class="page-item"><button onclick="loadGroups(${i})" class="page-link">${i}</button></li>`;
+          pagesLinks += link;
+        }
+
+        groupsPagination.innerHTML =
+          '<li id="firstButtonLi" class="page-item"><button id="firstButton" class="page-link" onclick="firstPage()" aria-label="First"> <i class="fa fa-angle-double-left" aria-hidden="true"></i> </button></li>' +
+          '<li id="previousButtonLi" class="page-item"><button id="previousButton" class="page-link" onclick="previousPage()" aria-label="Previous"> <i class="fa fa-angle-left" aria-hidden="true"></i> </button></li>' +
+          pagesLinks +
+          '<li id="nextButtonLi" class="page-item"><button id="nextButton" class="page-link" onclick="nextPage()" aria-label="Next"> <i class="fa fa-angle-right" aria-hidden="true"></i> </button></li>' +
+          '<li id="lastButtonLi" class="page-item"><button id="lastButton" class="page-link" onclick="lastPage()" aria-label="Last"> <i class="fa fa-angle-double-right" aria-hidden="true"></i> </button></li>';
+        groups = groupsL;
+      }
+
+      function cleanInputs() {
+        $("#title").val("");
+        $("#title").prop("disabled", false);
+
+        $("#code").val("");
+        $("#code").prop("disabled", false);
+
+        $("#information").val("");
+        $("#information").prop("disabled", false);
+
+        $("#teacher").val("");
+        $("#teacher").prop("disabled", false);
+      }
+
+      function setFormInputs(group, disabled) {
+        $("#title").val(group.title);
+        $("#title").prop("disabled", disabled);
+
+        $("#code").val(group.code);
+        $("#code").prop("disabled", disabled);
+
+        $("#information").val(group.information);
+        $("#information").prop("disabled", disabled);
+
+        $("#teacher").val(group.teacher._id).trigger("change");
+        $("#teacher").prop("disabled", disabled);
+      }
+
+      function createGroup() {
+        modalType = "post";
+        modalTitle.innerText = "Crear Grupo";
+        cleanInputs();
+        const formulario = document.getElementById("groupForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.remove("d-none");
+      }
+
+      async function viewGroup(id) {
+        modalType = "";
+        modalTitle.innerText = "Ver grupo";
+        cleanInputs();
+        const formulario = document.getElementById("groupForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.add("d-none");
+
+        let groupResponse = await GroupsAPI.getGroup(id),
+          group = await groupResponse.json();
+        setFormInputs(group, true);
+      }
+
+      async function editGroup(id) {
+        groupId = id;
+        modalType = "put";
+        modalTitle.innerText = "Editar grupo";
+        cleanInputs();
+        let formulario = document.getElementById("groupForm");
+        let submitBtn = formulario.querySelector("input[type=submit]");
+        submitBtn.classList.remove("d-none");
+        let groupResponse = await GroupsAPI.getGroup(id),
+          group = await groupResponse.json();
+        setFormInputs(group, false);
+      }
+
+      async function loadTeachers() {
+        let teachersResponse = await GroupsAPI.getTeachers(),
+          teachersJson = await teachersResponse.json();
+        teachers = teachersJson;
+        f_teacher.innerHTML =
+          '<option value="">Selecciona una opción</option>' +
+          teachers
+            .map(
+              (teacher) =>
+                `<option value="${teacher._id}">${teacher.name} ${teacher.lastname}</option>`
+            )
+            .join("");
+        teacher.innerHTML =
+          '<option value="">Selecciona una opción</option>' +
+          teachers
+            .map(
+              (teacher) =>
+                `<option value="${teacher._id}">${teacher.name} ${teacher.lastname}</option>`
+            )
+            .join("");
+
+        getGroupsL();
+      }
+
+      async function deleteGroup(id) {
+        await GroupsAPI.deleteGroup(id);
+        getGroupsL();
+      }
+
+      async function closeGroup(id) {
+        await GroupsAPI.closeGroup(id);
+        getGroupsL();
+      }
+
+      async function openGroup(id) {
+        await GroupsAPI.openGroup(id);
+        getGroupsL();
+      }
+
+      function loadGroups(page) {
+        currentPage = page;
+        startGroup = page * view - view;
+        endGroup = page * view;
+        setPagination(groups);
+        let slice = groups.slice(startGroup, endGroup);
+        groupsList.innerHTML = slice
+          .map((group) =>
+            group.usertype != 3
+              ? `
+              <tr>
+                <td>${group.title}</td>
+                <td>${group.code}</td>
+                <td>${group.teacher.name} ${group.teacher.lastname}</td>
+                <td>${group.published ? "Sí" : "No"}</td>
+                <td>
+                  <div class="d-flex">
+                    <button
+                      class="btn  btn-secondary mr-2"
+                      type="button" 
+                      data-toggle="modal"
+                      data-target="#groupModal"
+                      title="Ver grupo"
+                      onclick="viewGroup('${group.uid}')"
+                    >                      
+                      <i class="fas fa-search"></i>
+                    </button>
+                    <button
+                      class="btn  btn-info mr-2"
+                      type="button" 
+                      data-toggle="modal"
+                      data-target="#groupModal"
+                      title="Editar grupo"
+                      onclick="editGroup('${group.uid}')"
+                    >
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <button
+                      class="btn  btn-danger mr-2"
+                      type="button" 
+                      title="Eliminar grupo"
+                      onclick="deleteGroup('${group.uid}')"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                    ${
+                      group.published
+                        ? `<button class="btn  btn-primary" type="button" title="Cerrar grupo"  onclick="closeGroup('${group.uid}')"><i class="fas fa-times-circle"></i></button>`
+                        : `<button class="btn  btn-success" type="button" title="Abrir grupo" onclick="openGroup('${group.uid}')"><i class="fas fa-undo"></i></button>`
+                    }
+                  </div>
+                </td>
+              </tr>
+        `
+              : ""
+          )
+          .join("");
+        const lista = document.getElementById("groupsPagination");
+        const items = lista.getElementsByTagName("li");
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].textContent.trim() === page.toString()) {
+            items[i].classList.add("active");
+          } else {
+            items[i].classList.remove("active");
+          }
+        }
+
+        if (currentPage == 1) {
+          firstButtonLi.classList.add("disabled");
+          previousButtonLi.classList.add("disabled");
+          previousButton.disabled = true;
+          firstButton.disabled = true;
+        } else {
+          firstButtonLi.classList.remove("disabled");
+          previousButtonLi.classList.remove("disabled");
+          previousButton.disabled = false;
+          firstButton.disabled = false;
+        }
+        if (currentPage == pages) {
+          nextButtonLi.classList.add("disabled");
+          nextButton.disabled = true;
+          lastButtonLi.classList.add("disabled");
+          lastButton.disabled = true;
+        } else {
+          nextButtonLi.classList.remove("disabled");
+          nextButton.disabled = false;
+          lastButtonLi.classList.remove("disabled");
+          lastButton.disabled = false;
+        }
+      }
+
+      async function getGroupsL() {
+        let f_title = $("#f_title").val(),
+          f_code = $("#f_code").val(),
+          f_teacher = $("#f_teacher").val(),
+          f_published = $("#published").is(":checked") ? "0" : "1";
+
+        let groupsResponse = await GroupsAPI.getGroups(
+            f_title,
+            f_code,
+            f_teacher,
+            f_published
+          ),
+          groupsJSON = await groupsResponse.json();
+        groups = groupsJSON;
+        loadGroups(1);
+      }
+
+      loadTeachers();
+
+      let groupform = document.getElementById("groupForm");
+      groupform.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(groupform);
+        const group = Object.fromEntries(formData.entries());
+        let response =
+          modalType == "post"
+            ? await GroupsAPI.createGroup(group)
+            : modalType == "put"
+            ? await GroupsAPI.updateGroup(groupId, group)
+            : {};
+        cleanInputs();
+        getGroupsL();
+        $("#groupModal").modal("hide");
+      });
+    </script>
+  </body>
+</html>

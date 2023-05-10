@@ -15,10 +15,21 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
-    <div class="jumbotron">
-      <h1 class="display-3">Course Assignment Management System</h1>
+    <div class="jumbotron" id="homejumbotron">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-danger btn-lg" onclick="AuthAPI.logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+      <h1 class="display-3">CASYM</h1>
       <p class="lead">
         ¡Bienvenido a nuestra aplicación de gestión de asignaciones de cursos!
         Aquí, los estudiantes pueden acceder a las tareas asignadas por los
@@ -32,8 +43,19 @@
         <a class="btn btn-primary btn-lg" href="/cursos" role="button"
           >Ir a mis cursos</a
         >
+        <a
+          id="rubricsLink"
+          class="btn btn-primary btn-lg d-none"
+          href="/rubricas"
+          role="button"
+          >Ver mis rúbricas</a
+        >
+        <a class="btn btn-primary btn-lg" href="./perfil" role="button"
+          >Ver mi perfil</a
+        >
       </p>
     </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -51,5 +73,35 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../../js/request/index.js"></script>
+    <script src="../../js/api/authapi.js"></script>
+    <script>
+      let usertype = localStorage.getItem("usertype");
+      if (!usertype) window.location.replace("/");
+
+      if (usertype == 2) {
+        rubricsLink.classList.remove("d-none");
+      }
+
+      function showRubricasButton() {
+        let button = document.createElement("rubricasbutton");
+        if (localStorage.getItem("usertype") == 2) {
+          button.style.display = "block";
+        } else button.style.display = "none";
+      }
+      showRubricasButton();
+
+      // function to toggle password visibility
+      function togglePasswordVisibility() {
+        const passwordInput = $(this).closest(".input-group").find("input");
+        const passwordInputType = passwordInput.attr("type");
+        if (passwordInputType === "password") {
+          passwordInput.attr("type", "text");
+        } else {
+          passwordInput.attr("type", "password");
+        }
+        $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+      }
+    </script>
   </body>
 </html>
