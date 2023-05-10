@@ -53,6 +53,7 @@ router.post("/", async (req, res) => {
               email: email,
               uid: userEmail.uid,
               usertype: userEmail.usertype,
+              id: userEmail._id,
             },
             "daswCosym"
           );

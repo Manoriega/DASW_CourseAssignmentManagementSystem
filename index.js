@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
-const rubricaRoute = require("./routes/rubricas-routes");
 const groupRoutes = require("./routes/groupsRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
@@ -24,6 +23,7 @@ app.use(
 );
 app.use(express.static(path.join(__dirname, "/public")));
 app.use("/", express.static(path.join(__dirname, "/public/html")));
+app.use("/public/js", express.static(path.join(__dirname, "/public/js")));
 app.use(
   "/cursos/:id",
   express.static(path.join(__dirname, "/public/html/cursos/grupo/grupo.html"))
@@ -42,6 +42,10 @@ app.use(
 );
 app.use(
   "/cursos/:grupoId/tareas/crear",
+  express.static(path.join(__dirname, "/public/html/tareas/crear"))
+);
+app.use(
+  "/cursos/:grupoId/tareas/editar",
   express.static(path.join(__dirname, "/public/html/tareas/crear"))
 );
 app.use(
@@ -65,7 +69,10 @@ app.use(
   express.static(path.join(__dirname, "/public/html/evaluar"))
 );
 
-app.use("/rubricas", express.static(path.join(__dirname, "/public/html/rubricas")));
+app.use(
+  "/rubricas",
+  express.static(path.join(__dirname, "/public/html/rubricas"))
+);
 
 app.use("/api/rubricas", rubricaRoute);
 app.use("/api/groups", groupRoutes);

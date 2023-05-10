@@ -29,18 +29,33 @@ const entregaSchema = mongoose.Schema({
     type: Number,
     default: null,
   },
+  comments: {
+    type: String,
+    default: null,
+  },
   creationDate: {
     type: Date,
     default: Date.now,
   },
-  reviewDate: {
-    type: Date,
-    default: null,
-  },
 });
 
 entregaSchema.statics.getEntregas = async (filters = {}, projection = {}) => {
-  let docs = await Entregas.find(filters, projection);
+  let docs = await Entregas.find(filters, projection)
+    .populate({
+      path: "assignmentId",
+      model: "assignments",
+      select: "_id title description dueDate rubricId creationDate",
+    })
+    .populate({
+      path: "studentDeliver",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "reviewer",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    });
   //console.log(docs);
   return docs;
 };
@@ -52,7 +67,22 @@ entregaSchema.statics.createEntrega = async (entrega) => {
 };
 
 entregaSchema.statics.getEntregaById = async (id, projection = {}) => {
-  let entrega = await Entregas.findById(id, projection);
+  let entrega = await Entregas.findById(id, projection)
+    .populate({
+      path: "assignmentId",
+      model: "assignments",
+      select: "_id title description dueDate rubricId creationDate",
+    })
+    .populate({
+      path: "studentDeliver",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "reviewer",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    });
   //console.log(entrega);
   return entrega;
 };
@@ -75,7 +105,7 @@ entregaSchema.statics.deleteEntrega = async (id) => {
 
 let Entregas = mongoose.model("entregas", entregaSchema);
 
-Entregas.getEntregas();
+//Entregas.getEntregas();
 
 /* Entregas.createEntrega({
   assignmentId: "1",
@@ -93,5 +123,10 @@ Entregas.getEntregas();
 //Entregas.updateEntrega("6457227a7b61c991cd7911c9", { finalScore: 7.5 });
 
 //Entregas.deleteEntrega("6457227a7b61c991cd7911c9");
+
+Entregas.getEntregas({
+  assignmentId: "645745a2c34ae784beac5e98",
+  reviewer: "6456a11b027b2f119f0c95ce",
+});
 
 module.exports = { Entregas };

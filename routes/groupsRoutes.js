@@ -22,7 +22,7 @@ router.get("/", isLogged, async (req, res) => {
   if (published) filters.published = published;
 
   try {
-    let user = await Users.getUserById(student.uid);
+    let user = await Users.getUserByUid(student.uid);
     let groups =
       user.usertype == 3
         ? await Groups.getGroups(filters)
@@ -162,41 +162,64 @@ router.get("/:groupId/students", isStudentOrTeacher, async (req, res) => {
 
 // Agregar estudiante a un grupo
 
-router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
-  try {
-    let groupId = req.params.groupId,
-      studentId = req.params.studentId;
-    let group = await Groups.getGroupById(groupId);
-    if (group) {
-      let student = await Users.getUserById(studentId);
-      if (student) {
-        await Groups.addStudent(groupId, studentId);
-        await Users.addGroup(studentId, groupId);
-        res.status(201).send(`Student added`);
-      } else res.status(404).send("Student not found");
-    } else res.status(404).send("Group not found");
-  } catch (e) {
-    res.status(400).send("An error has occurred");
+router.post(
+  "/:groupId/student/:studentId",
+  teacherPermissions,
+  async (req, res) => {
+    try {
+      let groupId = req.params.groupId,
+        studentId = req.params.studentId;
+      let group = await Groups.getGroupById(groupId);
+      console.log(group);
+      if (group) {
+        let student = await Users.getUserById(studentId);
+        if (student) {
+          await Groups.addStudent(groupId, studentId);
+          await Users.addGroup(studentId, groupId);
+          res.status(201).send(`Student added`);
+        } else res.status(404).send("Student not found");
+      } else res.status(404).send("Group not found");
+    } catch (e) {
+      console.log(e);
+      res.status(400).send("An error has occurred");
+    }
   }
-});
+);
 
 // Eliminar estudiante a un grupo
 
-router.post("/:groupId/student/:studentId", onlyAdmin, async (req, res) => {
+router.post(
+  "/:groupId/student/:studentId",
+  teacherPermissions,
+  async (req, res) => {
+    try {
+      let groupId = req.params.groupId,
+        studentId = req.params.studentId;
+      let group = await Groups.getGroupById(groupId);
+      if (group) {
+        let student = await Users.getUserById(studentId);
+        if (student) {
+          await Groups.removeStudent(groupId, studentId);
+          await Users.removeGroup(studentId, groupId);
+          res.status(201).send(`Student removed`);
+        } else res.status(404).send("Student not found");
+      } else res.status(404).send("Group not found");
+    } catch (e) {
+      res.status(400).send("An error has occurred");
+    }
+  }
+);
+
+router.get("/:id/studentsToAdd", teacherPermissions, async (req, res) => {
   try {
-    let groupId = req.params.groupId,
-      studentId = req.params.studentId;
-    let group = await Groups.getGroupById(groupId);
-    if (group) {
-      let student = await Users.getUserById(studentId);
-      if (student) {
-        await Groups.removeStudent(groupId, studentId);
-        await Users.removeGroup(studentId, groupId);
-        res.status(201).send(`Student removed`);
-      } else res.status(404).send("Student not found");
-    } else res.status(404).send("Group not found");
+    let users = await Users.getUsers({
+      groups: { $nin: [req.params.id] },
+      usertype: 1,
+    });
+    res.send(users);
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    res.status(400).send("An error has ocurred");
+    console.log(e);
   }
 });
 

@@ -8,7 +8,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -22,13 +22,6 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
-        <li class="breadcrumb-item"><a id="courseLink">Curso</a></li>
-        <li class="breadcrumb-item"><a id="assignmentsLink">Tareas</a></li>
-        <li class="breadcrumb-item">
-          <a id="assignmentLink">Tarea</a>
-        </li>
-        <li class="breadcrumb-item"><a id="entriesLink">Entregas</a></li>
-        <li class="breadcrumb-item"><a id="entriesLink">Entrega</a></li>
         <li
           id="entrieNameLink"
           class="breadcrumb-item active"
@@ -38,104 +31,15 @@
         </li>
       </ol>
     </nav>
-    <div class="px-3">
+    <div class="p-3">
       <h1>Evaluación</h1>
-      <div class="card mb-5">
-        <h5 class="card-header" style="background-color: rgb(81, 154, 231)">
-          <i class="fas fa-sticky-note"></i>1
-        </h5>
-        <div class="card-body">
-          <p class="card-text">¿El compañero comunica bien sus ideas?</p>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
-              value="option1"
-            />
-            <label class="form-check-label" for="inlineRadio1">Si</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio2"
-              value="option2"
-            />
-            <label class="form-check-label" for="inlineRadio2">No</label>
-          </div>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Sin contestar</small>
-        </div>
-      </div>
-      <div class="card mb-5">
-        <h5 class="card-header" style="background-color: rgb(81, 154, 231)">
-          <i class="fas fa-sticky-note"></i>2
-        </h5>
-        <div class="card-body">
-          <p class="card-text">
-            ¿Cumple con todos los requisitos pedidos en la descripcion de la
-            tarea?
-          </p>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
-              value="option1"
-            />
-            <label class="form-check-label" for="inlineRadio1">Si</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio2"
-              value="option2"
-            />
-            <label class="form-check-label" for="inlineRadio2">No</label>
-          </div>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Sin contestar</small>
-        </div>
-      </div>
-      <div class="card mb-5">
-        <h5 class="card-header" style="background-color: rgb(81, 154, 231)">
-          <i class="fas fa-sticky-note"></i>3
-        </h5>
-        <div class="card-body">
-          <p class="card-text">¿Muestra señal de plagio?</p>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
-              value="option1"
-            />
-            <label class="form-check-label" for="inlineRadio1">Si</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio2"
-              value="option2"
-            />
-            <label class="form-check-label" for="inlineRadio2">No</label>
-          </div>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Sin contestar</small>
-        </div>
-      </div>
+      <h4>
+        <a id="downloadFileLink">Descargar archivo</a>
+      </h4>
+      <div id="questionsList"></div>
+      <button id="reviewBtn" class="btn btn-outline-success" disabled>
+        Evaluar
+      </button>
     </div>
 
     <!-- Optional JavaScript -->
@@ -155,5 +59,119 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <script src="/public/js/request/index.js"></script>
+    <script src="/public/js/api/assignmentsapi.js"></script>
+    <script src="/public/js/api/groupsapi.js"></script>
+    <script>
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        entryId = partesURL[partesURL.length - 3],
+        assignmentId = partesURL[partesURL.length - 5],
+        groupId = partesURL[partesURL.length - 7],
+        answers = [];
+
+      function pickAnswer(opt, value) {
+        answers[opt].answer = value;
+        let message = document.getElementById(`question_${opt}_msg`);
+        message.classList.add("d-none");
+        let disabled = false;
+        for (let i = 0; i < answers.length; i++) {
+          const answer = answers[i];
+          if (answer.answer == null) {
+            disabled = true;
+            break;
+          }
+        }
+        $("#reviewBtn").prop("disabled", disabled);
+      }
+
+      async function loadEntry() {
+        let response = await AssignmentsAPI.getEntry(entryId);
+        if (response.status == 200) {
+          let entry = await response.json();
+          downloadFileLink.href = `/api/assignments/reviewer/download/${entryId}`;
+          if (entry.studentScore) {
+            alert("Esta tarea ya ha sido evaluada");
+            window.location.replace(`/cursos/${groupId}/tareas`);
+          }
+        } else window.location.replace("/home");
+      }
+
+      async function loadAssignmnet() {
+        let response = await AssignmentsAPI.getAssignment(assignmentId);
+        if (response.status == 200) {
+          let assignment = await response.json(),
+            questions = assignment.rubricId.preguntas;
+          await loadEntry();
+          answers = questions.map((question, index) =>
+            JSON.parse(`{"question": ${index + 1}, "answer": null}`)
+          );
+          console.log(answers);
+          questionsList.innerHTML = questions
+            .map(
+              (question, index) => `<div class="card mb-5">
+          <h5 class="card-header" style="background-color: rgb(81, 154, 231)">
+            <i class="fas fa-sticky-note"></i>${index + 1}
+          </h5>
+          <div class="card-body">
+            <p class="card-text">${question}</p>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="question-${
+                index + 1
+              }" id="question-${
+                index + 1
+              }-1" value="1" onchange="pickAnswer('${index}', true)">
+              <label class="form-check-label" for="question-${
+                index + 1
+              }-1">Sí</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="question-${
+                index + 1
+              }" id="question-${
+                index + 1
+              }-0" value="0" onchange="pickAnswer('${index}', false)">
+              <label class="form-check-label" for="question-${
+                index + 1
+              }-0">No</label>
+            </div>
+          </div>
+          <div id="question_${index}_msg" class="card-footer">
+            <small class="text-muted">Sin contestar</small>
+          </div>
+        </div>`
+            )
+            .join("");
+        } else window.location.replace("/home");
+      }
+      let reviewBtn = document.getElementById("reviewBtn");
+
+      reviewBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        for (let i = 0; i < answers.length; i++) {
+          const answer = answers[i];
+          if (answer.answer == null) {
+            alert("Falta contestar alguna pregunta");
+            return;
+          }
+        }
+        let max = answers.length;
+        let score = 0;
+        answers.forEach((answer) => {
+          if (answer.answer) score++;
+        });
+        let percentage = score / max,
+          studentScore = 10 * percentage;
+        let response = await AssignmentsAPI.studentReview(entryId, {
+          studentScore,
+        });
+        if (response.status == 200) {
+          alert("La tarea ha sido evaluada correctamente");
+          window.location.replace(`/cursos/${groupId}/tareas`);
+        }
+      });
+      loadAssignmnet();
+    </script>
   </body>
 </html>

@@ -33,38 +33,39 @@
         </li>
       </ol>
     </nav>
-    <form
-      id="tareaFileForm"
-      action="form"
-      enctype="multipart/form-data"
-      method="post"
-    >
-      <div class="px-3">
+    <form id="tareaFileForm">
+      <div class="px-3 pb-5">
         <div class="d-flex justify-content-between align-items-center pr-5">
-          <h2 id="assignmentName">Nombre de la tarea</h2>
+          <h2 id="assignmentName"></h2>
           <div>
-            <a
-              class="btn btn-primary"
-              id="entriesButton"
-              href="/cursos/1/tareas/1/entregas"
-            >
-              Ver entregas
-            </a>
-            <a
-              href="/cursos/1/tareas/1/editar"
-              class="btn btn-secondary"
-              id="editAssignment"
-            >
-              Editar tarea
-            </a>
-            <button class="btn btn-danger" id="deleteButton">
-              Eliminar tarea
-            </button>
+            <div id="teacherButtons">
+              <a
+                class="btn btn-primary"
+                id="entriesButton"
+                href="/cursos/1/tareas/1/entregas"
+              >
+                Ver entregas
+              </a>
+              <a
+                href="/cursos/1/tareas/1/editar"
+                class="btn btn-secondary"
+                id="editAssignment"
+              >
+                Editar tarea
+              </a>
+              <button
+                class="btn btn-danger"
+                id="deleteButton"
+                onclick="deleteAssignment()"
+              >
+                Eliminar tarea
+              </button>
+            </div>
             <button
               id="assignmentButton"
-              class="btn btn-primary"
+              class="btn btn-primary d-none"
               disabled
-              type="submit"
+              type="button"
             >
               Entregar Tarea
             </button>
@@ -73,31 +74,15 @@
         <hr />
         <p>
           <strong>Fecha de entrega</strong>
-          <span id="assignmentDate">2023/05/14</span>
+          <span id="assignmentDate"></span>
         </p>
         <hr />
 
-        <p id="assignmentDescription">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum quo
-          consequuntur, dolore atque cupiditate obcaecati ipsam neque fuga
-          quisquam quas excepturi impedit necessitatibus placeat reprehenderit
-          minima totam ipsa laudantium, suscipit, sit odio. Dolorum animi,
-          temporibus laborum magnam eligendi aspernatur quis labore repellendus,
-          harum reiciendis, doloribus similique obcaecati dolore ad tenetur
-          deleniti. Odio perferendis eaque nobis quisquam natus consequatur, cum
-          ab nesciunt ad voluptatibus et laudantium perspiciatis doloremque,
-          voluptatum harum odit, illo aliquid delectus adipisci non. Similique
-          at ducimus reprehenderit eos, voluptatibus quibusdam, possimus
-          mollitia iusto placeat earum accusantium? In reprehenderit maxime
-          eveniet voluptatum quia temporibus facilis, doloribus non, sapiente
-          laudantium iusto doloremque ex. Harum esse, totam possimus ducimus
-          adipisci ab ut eaque voluptate corrupti amet sequi tempora sunt
-          doloribus officia quia, illo facilis asperiores quae.
-        </p>
+        <p id="assignmentDescription"></p>
 
-        <div id="assignmentForm" class="form-group">
+        <div id="assignmentForm" class="form-group d-none">
           <label for="tareaFileForm">Carga tu archivo (.pdf)</label>
-          <input type="hidden" name="user_id" id="user_id" value="3" />
+          <input type="hidden" name="groupId" id="groupId" />
           <input
             type="file"
             class="form-control-file"
@@ -106,13 +91,13 @@
             required
             accept=".pdf"
           />
-          <div
-            id="assignmentDone"
-            class="alert alert-success my-2"
-            role="alert"
-          >
-            Ya has entregado esta tarea
-          </div>
+        </div>
+        <div
+          id="assignmentDone"
+          class="alert alert-success my-2 d-none"
+          role="alert"
+        >
+          Ya has entregado esta <a id="entryLink">tarea</a>
         </div>
       </div>
     </form>
@@ -134,5 +119,101 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="../../../js/common/index.js"></script>
+    <script src="../../../js/request/index.js"></script>
+    <script src="../../../js/api/groupsapi.js"></script>
+    <script src="../../../js/api/assignmentsapi.js"></script>
+    <script>
+      let assignmentButton = document.getElementById("assignmentButton");
+      let usertype = localStorage.getItem("usertype");
+      if (usertype == 1) {
+        teacherButtons.classList.add("d-none");
+        assignmentButton.classList.remove("d-none");
+        assignmentForm.classList.remove("d-none");
+      }
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        codigo = partesURL[partesURL.length - 3],
+        assignmentId = partesURL[partesURL.length - 1];
+      groupId.value = codigo;
+      async function deleteAssignment() {
+        let response = await AssignmentsAPI.deleteAssignment(assignmentId);
+        if (response.status == 200) {
+          window.location.replace(`/cursos/${codigo}/tareas`);
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadEntry() {
+        let response = await AssignmentsAPI.getAssignmentEntry(assignmentId);
+        if (response.status == 200) {
+          let entrega = await response.json();
+          assignmentForm.classList.add("d-none");
+          assignmentDone.classList.remove("d-none");
+          entryLink.href = window.location.href + `/entregas/${entrega._id}`;
+        }
+      }
+
+      async function loadAssignment(id) {
+        let response = await AssignmentsAPI.getAssignment(id);
+        if (response.status == 200) {
+          let assignment = await response.json();
+          assignmentNameLink.innerText = assignment.title;
+          assignmentName.innerText = assignment.title;
+          assignmentDate.innerText = formatDate(assignment.dueDate);
+          assignmentDescription.innerText = assignment.description;
+          entriesButton.href = `/cursos/${codigo}/tareas/${id}/entregas`;
+          editAssignment.href = `/cursos/${codigo}/tareas/${id}/editar`;
+          loadEntry();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadGroup() {
+        let response = await GroupsAPI.getGroup(codigo);
+        if (response.status == 200) {
+          let group = await response.json();
+          courseLink.innerText = group.title;
+          courseLink.href = `/cursos/${group.uid}`;
+          assignmentsLink.href = `/cursos/${group.uid}/tareas`;
+          loadAssignment(assignmentId);
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      tareaInputFile.addEventListener("change", (e) => {
+        if (tareaInputFile.value)
+          $("#assignmentButton").prop("disabled", false);
+        else $("#assignmentButton").prop("disabled", true);
+      });
+
+      let tareaFileForm = document.getElementById("tareaFileForm");
+
+      assignmentButton.addEventListener("click", async (e) => {
+        let submit = new FormData(tareaFileForm);
+        let response = await AssignmentsAPI.submitAssignment(
+          assignmentId,
+          submit
+        );
+        if (response.status == 201) {
+          alert("La tarea se ha entregado correctamente");
+          window.location.replace(`/cursos/${codigo}/tareas/`);
+        } else window.location.replace(`/home`);
+      });
+
+      loadGroup();
+    </script>
   </body>
 </html>

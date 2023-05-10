@@ -12,7 +12,7 @@ Content-Type: application/json
 ###
 POST {{host}}/api/users
 Content-Type: application/json
-x-auth: 
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJPWFVIQWdna29tOHdvRmdkaU1TT1IiLCJ1c2VydHlwZSI6MywiaWQiOiI2NDU3NGJkNjIwMGNhZmIxMjE4Mzk0ZDQiLCJpYXQiOjE2ODM0NDI3MzJ9.BCsd1NI5xcfd8rgKnlgENN3YbxMIQpAuQFhT6AVLo-4
 
 {
     "name": "Luis",
@@ -25,13 +25,13 @@ x-auth:
 ###
 POST {{host}}/api/groups
 Content-Type: application/json
-x-auth: 
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJPWFVIQWdna29tOHdvRmdkaU1TT1IiLCJ1c2VydHlwZSI6MywiaWQiOiI2NDU3NGJkNjIwMGNhZmIxMjE4Mzk0ZDQiLCJpYXQiOjE2ODM0NDI3MzJ9.BCsd1NI5xcfd8rgKnlgENN3YbxMIQpAuQFhT6AVLo-4
 
 {
     "title": "Programación Estructurada",
     "code": "P2023_ESI1234F",
     "information": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, ut impedit rem quisquam accusantium nam repellendus expedita nulla vitae ullam dolor praesentium, excepturi totam. Et laudantium laboriosam mollitia aut accusantium? Aliquid officia quam cupiditate. Natus nemo sunt voluptatibus quas doloremque facere hic eius quisquam voluptas quae porro quia nulla fugiat harum, sapiente laudantium quidem quibusdam! Doloremque provident eos enim modi.",
-    "teacher": ""
+    "teacher": "v5VgG4XxqEYA5gEUYsJNs"
 }
 
 ###
@@ -39,76 +39,62 @@ POST {{host}}/api/auth
 Content-Type: application/json
 
 {
-    "email": "pedrogonzales@iteso.mx",
-    "password": "Pedro1"
+    "email": "luis.fernando@iteso.mx",
+    "password": "123456"
 }
 
 ###
 GET {{host}}/api/groups
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTRhNTNmMmQ2M2E0MzA5MDIyZSIsImVtYWlsIjoibWF1cmljaW8ubm9yaWVnYUBpdGVzby5teCIsInVpZCI6IndrOHNTbU9Wa0s0c0FOa0Z0elVvdiIsInVzZXJ0eXBlIjoxLCJpYXQiOjE2ODM0Mjk3MDB9.FAYtM5Oa-U8y3yWlccYuveXb4BEDPuJQQcBE6pqHMXc
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 ###
-GET {{host}}/api/groups/:groupId
-x-auth: 
+GET {{host}}/api/groups/l2KzokVG
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 ###
-GET {{host}}/api/groups/:groupId/studentsToAdd
-x-auth: 
+GET {{host}}/api/groups/l2KzokVG/studentsToAdd
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 ###
-POST {{host}}/api/groups/:groupId/student/:studentId
-x-auth: 
+POST {{host}}/api/groups/l2KzokVG/student/Q7EEoeoNAczik1OE1WUqB
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
-//LOGIN CON PROFESOR
-###
-POST {{host}}/api/auth
-Content-Type: application/json
-
-{
-    "email": "pedrogonzales@iteso.mx",
-    "password": "Pedro1"
-}
 ###
 // Crear una rúbrica
 POST  {{host}}/api/rubricas/
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNTA5fQ.rwFepv7DjN0ABo_t37UCyQx_S-BLJoh3mDnpPcgfrIM
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM1MDAzNjV9.MyDurplWzkXFtQkRR7fYBlLnAsDttEcy4vZqVxfypmc
 Content-Type: application/json
 
 {
-    "nombre": "Tarea 1 Web Rubrica",
-    "preguntas": ["Mantuvo el HTML y CSS separados en sus archivos?",
-    "El companero usa bootstrap para estilizar su pagina web?"],
-    "owner":"pedrogonzales@iteso.mx",
+    "nombre": "Básica",
+    "preguntas": ["¿Cuenta con todo lo solicitado?",
+    "¿Presenta limpieza en el trabajo?", "¿Cuenta con conclusiones personales?"],    
     "curso":"Desarrollo de Aplicaciones y Servicios Web"
 }
 
 //mostrar rubricas de usuario 
 ###
 GET {{host}}/api/rubricas/
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNzc5fQ.hsDBm0ruzKc2nI2IsSm1YUKETCihVdXT5MZezM2XXPA
-
-//borrar una rubrica 
-###
-DELETE {{host}}/api/rubricas/9O4YA6_6t8r3kAl2CPvWY
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMxMjkzfQ.v-jTVZ7ezkdDrwCTwSmdhEUZmhj7aiGrcluAqZ0slaU
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0ODgwMDd9.EV-SzK67nuDlcs86GGcNhC9P12ZNCrZI2GBz4-gRCEY
 
 //ver una rubrica en especifico:
 ###
-GET {{host}}/api/rubricas/B9QkHQ5EHVa1o46g5ExQs
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMzNzc5fQ.hsDBm0ruzKc2nI2IsSm1YUKETCihVdXT5MZezM2XXPA
+GET {{host}}/api/rubricas/D89BwMbS__5nDOnbLHYfy
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 // Crear una tarea
 
 ###
 POST {{host}}/api/assignments
 Content-Type: application/json
-x-auth: 
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 {
-  "title": "Primera entrega de requerimientos",
+  "title": "Primera entrega de web",
   "description": "Something",
   "dueDate": "2023-06-16T04:59:00.000Z",
-  "rubricId": "" 
+  "rubricId": "D89BwMbS__5nDOnbLHYfy",
+  "groupId": "l2KzokVG"
 }
 
 // Iniciar sesión como estudiante
@@ -118,23 +104,61 @@ Content-Type: application/json
 
 {
     "email": "mauricio.noriega@iteso.mx",
-    "password": "123456"
+    "password": "MaNo2023"
 }
 
+// Ver tareas
+###
+GET {{host}}/api/assignments/group/l2KzokVG
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0NDI4NDl9.MlADKQsacfGfLVGT5nPrZ8cqrRtnCPo8OVwHlavL0Ew
 
 // Ver una tarea
 ###
-GET {{host}}/api/assignments/:id
-x-auth: 
+GET {{host}}/api/assignments/64574c96db1225f01a58a8d9
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0NDI4NDl9.MlADKQsacfGfLVGT5nPrZ8cqrRtnCPo8OVwHlavL0Ew
 
 // Entregar la tarea 
-POST {{host}}/api/assignments/submit/:assignmentId
-x-auth:
+###
+POST {{host}}/api/assignments/submit/64574c96db1225f01a58a8d9
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0NDI4NDl9.MlADKQsacfGfLVGT5nPrZ8cqrRtnCPo8OVwHlavL0Ew
+
+{        
+    "groupId": "l2KzokVG",
+    "fileName": "filename.pdf"
+}
 
 // Iniciar sesión como otro estudiante
+###
+POST {{host}}/api/auth
+Content-Type: application/json
+
+{
+    "email": "sebastian.espinosa@iteso.mx",
+    "password": "SeEs2023"
+}
 
 // Evaluar la tarea de su compañero
+###
+PUT {{host}}/api/assignments/evaluate/reviewer/64574da0ff91b6f9d8986915
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlYmFzdGlhbi5lc3Bpbm9zYUBpdGVzby5teCIsInVpZCI6IlE3RUVvZW9OQWN6aWsxT0UxV1VxQiIsInVzZXJ0eXBlIjoxLCJpZCI6IjY0NTc0YzRmZGIxMjI1ZjAxYTU4YThiYiIsImlhdCI6MTY4MzQ0MzEyMH0.Z7RHAk3_Aps4SAk4BlkzOYWK0hz6V9W9feb3vyNvyzI
+
+{
+    "studentScore": 8
+}
 
 // (Como el profesor) Ver la entrega de la tarea
+###
+GET {{host}}/api/assignments/entry/64574da0ff91b6f9d8986915
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 // (Como el profesor) Asignar una calificación
+###
+PUT {{host}}/api/assignments/evaluate/teacher/64574da0ff91b6f9d8986915
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
+
+{
+    "teacherScore": 7
+}
