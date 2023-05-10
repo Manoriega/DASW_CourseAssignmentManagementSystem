@@ -30,7 +30,7 @@ assignmentSchema.statics.getAssignments = async (
   let docs = await Assignments.find(filters, projection).populate({
     path: "rubricId",
     model: "Rubrica",
-    select: "_id preguntas",
+    select: "preguntas",
   });
   //console.log(docs);
   return docs;
@@ -46,7 +46,7 @@ assignmentSchema.statics.getAssignmentById = async (id, projection = {}) => {
   let assignment = await Assignments.findById(id, projection).populate({
     path: "rubricId",
     model: "Rubrica",
-    select: "_id preguntas",
+    select: "preguntas",
   });
   return assignment;
 };

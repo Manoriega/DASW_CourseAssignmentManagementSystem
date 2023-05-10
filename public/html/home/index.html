@@ -53,10 +53,6 @@
         <a class="btn btn-primary btn-lg" href="./perfil" role="button"
           >Ver mi perfil</a
         >
-          Cambiar contraseña
-        </button>
-        <a name="" id="rubricasbutton" class="btn btn-primary btn-lg" href="/rubricas" role="button">Ir a mis Rubricas</a>
-
       </p>
     </div>
 
@@ -86,15 +82,12 @@
       if (usertype == 2) {
         rubricsLink.classList.remove("d-none");
       }
-      
-      function showRubricasButton()
-      {
+
+      function showRubricasButton() {
         let button = document.createElement("rubricasbutton");
-        if (localStorage.getItem("usertype") == 2)
-        {
+        if (localStorage.getItem("usertype") == 2) {
           button.style.display = "block";
-        }
-        else button.style.display = "none";
+        } else button.style.display = "none";
       }
       showRubricasButton();
 

@@ -36,7 +36,7 @@ RubricSchema.statics.getRubricaByEmail = async (owner) => {
 
 RubricSchema.statics.getTeacherRubricas = async (filters = {}) => {
   let docs = await Rubrica.find(filters, {
-    _id: 0,
+    _id: 1,
     uid: 1,
     nombre: 1,
     preguntas: 1,

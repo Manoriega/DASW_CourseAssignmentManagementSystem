@@ -22,6 +22,7 @@ router.get("/", isLogged, async (req, res) => {
     let rubricas = await Rubrica.getTeacherRubricas(filters);
     res.send(rubricas);
   } catch (e) {
+    console.log(e);
     res.status(400).send("An error has occurred");
   }
   //res.status(200).send({Repuesta: "this is actually working"});
