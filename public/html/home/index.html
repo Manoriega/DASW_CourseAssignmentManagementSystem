@@ -23,7 +23,7 @@
     />
   </head>
   <body>
-    <div class="jumbotron">
+    <div class="jumbotron" id="homejumbotron">
       <div class="d-flex justify-content-end">
         <button class="btn btn-danger btn-lg" onclick="AuthAPI.logout()">
           <i class="fas fa-sign-out-alt"></i>
@@ -53,6 +53,10 @@
         <a class="btn btn-primary btn-lg" href="./perfil" role="button"
           >Ver mi perfil</a
         >
+          Cambiar contraseña
+        </button>
+        <a name="" id="rubricasbutton" class="btn btn-primary btn-lg" href="/rubricas" role="button">Ir a mis Rubricas</a>
+
       </p>
     </div>
 
@@ -81,6 +85,29 @@
 
       if (usertype == 2) {
         rubricsLink.classList.remove("d-none");
+      }
+      
+      function showRubricasButton()
+      {
+        let button = document.createElement("rubricasbutton");
+        if (localStorage.getItem("usertype") == 2)
+        {
+          button.style.display = "block";
+        }
+        else button.style.display = "none";
+      }
+      showRubricasButton();
+
+      // function to toggle password visibility
+      function togglePasswordVisibility() {
+        const passwordInput = $(this).closest(".input-group").find("input");
+        const passwordInputType = passwordInput.attr("type");
+        if (passwordInputType === "password") {
+          passwordInput.attr("type", "text");
+        } else {
+          passwordInput.attr("type", "password");
+        }
+        $(this).find("i").toggleClass("fa-eye fa-eye-slash");
       }
     </script>
   </body>

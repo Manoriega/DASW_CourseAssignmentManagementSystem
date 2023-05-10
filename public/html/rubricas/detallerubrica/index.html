@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Detalle de rubrica</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        h1 {
+            background-color: rgb(35, 88, 211);
+            color:white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    </head>
+  <body>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+      <li class="breadcrumb-item"><a href="/cursos">Cursos</a></li>
+      <li class="breadcrumb-item"><a href="/rubricas">Rubrica</a></li>
+      <li class="breadcrumb-item" aria-current="page">Detalles</li>
+
+      </ol>
+    </nav>
+    <h1 class="mb-3">Detalle de rubrica</h1>
+    <br>
+    <h4 id="nombrerubrica">Nombre</h4>
+    <br>
+    <h4 id="cursorubrica">Curso</h4>
+    <br>
+    <h4 id="fecharubrica">Fecha:</h4>
+    <br>
+    <h4 id="preguntas">Preguntas</h4>
+    <br>
+    <div id="preguntassection">
+
+    </div>
+
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../../../js/Request/index.js"></script>
+    <script>
+      async function loadRubrica() {
+      let nombrelabel = document.getElementById("nombrerubrica");
+      let cursolabel = document.getElementById("cursorubrica");
+      let fechalabel = document.getElementById("fecharubrica");
+      let url = window.location.href,
+          partesURL = url.split("/"),
+          codigo = partesURL[partesURL.length - 1];
+      let urllink = "/api/rubricas/" + codigo;
+      let response = await Request.get(urllink);
+        if (response.status == 200) {
+          let resp = await response.json();
+          console.log(resp);
+          const options = { day: 'numeric', month: 'short', year: 'numeric' };
+          let rubricadate = new Date(resp[0].fecha);
+          console.log(rubricadate);
+          nombrelabel.innerHTML = "Nombre: " + resp[0].nombre; 
+          cursolabel.innerHTML = "Curso: " + resp[0].curso;
+          fechalabel.innerHTML = `Fecha: <span class="badge badge-secondary">${rubricadate.toLocaleDateString('en-US', options)}</span> `;
+          let preguntasSection = document.getElementById("preguntassection");
+
+        resp[0].preguntas.forEach((pregunta) => {
+
+          let preguntacard = document.createElement("div");
+          preguntacard.classList.add("card-mb-5");
+          preguntacard.innerHTML = `
+          <h5 class="card-header" style="background-color: rgb(15, 112, 230);"><i class="fas fa-sticky-note    "></i> Pregunta</h5>
+          <div class="card-body">
+            <p class="card-text">${pregunta}</p> </div>`;
+          preguntasSection.appendChild(preguntacard);
+        });
+      }
+      else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+      }
+    }
+    loadRubrica();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

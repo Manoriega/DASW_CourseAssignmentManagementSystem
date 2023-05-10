@@ -40,7 +40,7 @@ Content-Type: application/json
 
 {
     "email": "luis.fernando@iteso.mx",
-    "password": "123456"
+    "password": "Luisfer1"
 }
 
 ###
@@ -62,20 +62,25 @@ x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXR
 ###
 // Crear una rúbrica
 POST  {{host}}/api/rubricas/
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM1MDAzNjV9.MyDurplWzkXFtQkRR7fYBlLnAsDttEcy4vZqVxfypmc
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNTUxNzcyfQ.NQQFvXTJOsQ05e9RGd0BlehmNTpL7mc3-Vj-ly5DAAw
 Content-Type: application/json
 
 {
-    "nombre": "Básica",
-    "preguntas": ["¿Cuenta con todo lo solicitado?",
-    "¿Presenta limpieza en el trabajo?", "¿Cuenta con conclusiones personales?"],    
+    "nombre": "Tarea 1 Web Rubrica",
+    "preguntas": ["Mantuvo el HTML y CSS separados en sus archivos?",
+    "El companero usa bootstrap para estilizar su pagina web?"],
     "curso":"Desarrollo de Aplicaciones y Servicios Web"
 }
 
 //mostrar rubricas de usuario 
 ###
 GET {{host}}/api/rubricas/
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0ODgwMDd9.EV-SzK67nuDlcs86GGcNhC9P12ZNCrZI2GBz4-gRCEY
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNjg1MDA2fQ.MMdCW9vnYWPdGEw4QTapKfOgHRFi5tEyloP4oIjCrEM
+
+//borrar una rubrica 
+###
+DELETE {{host}}/api/rubricas/9O4YA6_6t8r3kAl2CPvWY
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMxMjkzfQ.v-jTVZ7ezkdDrwCTwSmdhEUZmhj7aiGrcluAqZ0slaU
 
 //ver una rubrica en especifico:
 ###
@@ -83,20 +88,16 @@ GET {{host}}/api/rubricas/D89BwMbS__5nDOnbLHYfy
 x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 // Crear una tarea
-
 ###
-POST {{host}}/api/assignments
+PUT {{host}}/api/rubricas/1KLNxFPt6KR_TVN3kQeSY
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNjg1MDA2fQ.MMdCW9vnYWPdGEw4QTapKfOgHRFi5tEyloP4oIjCrEM
 Content-Type: application/json
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWQiOiI2NDU3NGMzNmRiMTIyNWYwMWE1OGE4YjMiLCJpYXQiOjE2ODM0NDI3ODJ9.ss21qiyYfJZ1KA3UT3XFzQUcHpxvAreRWmXcrtO3qCQ
 
 {
-  "title": "Primera entrega de web",
-  "description": "Something",
-  "dueDate": "2023-06-16T04:59:00.000Z",
-  "rubricId": "D89BwMbS__5nDOnbLHYfy",
-  "groupId": "l2KzokVG"
+    "nombre":"Evaluacion final del proyecto",
+    "preguntas":["El proyecto utiliza structs"],
+    "curso": "Programación Estructurada"
 }
-
 // Iniciar sesión como estudiante
 ###
 POST {{host}}/api/auth

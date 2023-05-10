@@ -13,8 +13,13 @@ const {
 router.get("/", isLogged, async (req, res) => {
   let teacherToken = req.get("x-auth"),
     teacher = jwt.decode(teacherToken);
+  let { fecha, curso, nombre } = req.query;
+  let filters = { owner: teacher.email };
+  if (fecha) filters.fecha = new RegExp(fecha, "i");
+  if (curso) filters.curso = new RegExp(curso, "i");
+  if (nombre) filters.nombre = new RegExp(nombre, "i");
   try {
-    let rubricas = await Rubrica.getRubricaByEmail(teacher.email);
+    let rubricas = await Rubrica.getTeacherRubricas(filters);
     res.send(rubricas);
   } catch (e) {
     res.status(400).send("An error has occurred");
@@ -28,10 +33,13 @@ router.get("/:id", teacherPermissions, async (req, res) => {
 });
 
 router.post("/", teacherPermissions, async (req, res) => {
+  let teacherToken = req.get("x-auth"),
+    teacher = jwt.decode(teacherToken);
   let { nombre, preguntas, curso } = req.body;
   let errors = [];
   if (!nombre) errors.push("Nombre");
   if (!preguntas) errors.push("Preguntas");
+  if (!teacher) errors.push("Owner");
   if (!curso) errors.push("Curso");
   if (errors.length > 0) {
     res
@@ -41,7 +49,6 @@ router.post("/", teacherPermissions, async (req, res) => {
       );
     return;
   }
-  let teacher = jwt.decode(req.get("x-auth"));
   let newdoc = await Rubrica.addRubrica({
     uid: nanoid.nanoid(),
     nombre,
@@ -49,7 +56,7 @@ router.post("/", teacherPermissions, async (req, res) => {
     owner: teacher.email,
     curso,
   });
-  res.status(201).send({ Repuesta: "se ha posteado esta rubrica" });
+  res.status(201).send(newdoc);
 });
 
 router.delete("/:id", teacherPermissions, async (req, res) => {
@@ -58,8 +65,19 @@ router.delete("/:id", teacherPermissions, async (req, res) => {
 });
 
 router.put("/:id", teacherPermissions, async (req, res) => {
-  let { nombre, preguntas, owner, curso } = req.body;
-  let updatedDoc = await Rubrica.actualizarRubrica(req.params.id, req.body);
+  let teacherToken = req.get("x-auth"),
+    teacher = jwt.decode(teacherToken);
+  let updatedRubrica = {};
+  let { nombre, preguntas, curso } = req.body;
+  if (nombre) updatedRubrica.nombre = nombre;
+  if (preguntas) updatedRubrica.preguntas = preguntas;
+  if (curso) updatedRubrica.curso = curso;
+  updatedRubrica.fecha = Date.now();
+  updatedRubrica.owner = teacher.email;
+  let updatedDoc = await Rubrica.actualizarRubrica(
+    req.params.id,
+    updatedRubrica
+  );
   res.send(updatedDoc);
 });
 

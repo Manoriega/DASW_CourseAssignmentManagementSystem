@@ -26,46 +26,157 @@
   </head>
   <body>
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item" aria-current="page">Rubricas</li>
-      </ol>
-    </nav>
-    <h1>Rubricas</h1>
-    <table class="table table-stripped" id="">
-      <thead>
-        <th>UID</th>
-        <th>CURSO</th>
-        <th>FECHA DE CREACION</th>
-        <th></th>
-      </thead>
+
+        </ol>
+      </nav>
+      <h1>Rubricas</h1>
+      <div class="row">
+        
+        <div class="col-sm-3 mb-3">
+          <label for="f_name" class="form-label">Nombre</label>
+          <input
+            type="text"
+            class="form-control"
+            id="f_name"
+            name="f_name"
+            onkeyup="loadRubricas()"
+          />
+        </div>
+        
+        <div class="col-sm-3 mb-3">
+          <label for="f_usertype" class="form-label">Curso</label>
+          <select
+            class="form-control"
+            id="searchcurso"
+            name="searchcurso"
+            onchange="loadRubricas()"
+          >
+            
+          </select>
+        </div>
+        
+      <table class="table table-stripped" id="">
+        <thead>
+            <th>NOMBRE</th>
+            <th>CURSO</th>
+            <th>FECHA DE CREACION</th>
+            <th></th>
+          </thead>
       <tbody id="rubricasList"></tbody>
-    </table>
-    <script src="../../js/Request/index.js"></script>
-    <script>
-      let rubricas = [];
+
+      </table>
+
+      <br>
+      <a name="" id="" class="btn btn-outline-success" href="/rubricas/crearRubrica" role="button"> <i class="fas fa-plus-square    "></i> Crear rubrica</a>
+      <div class="modal" tabindex="-1" role="dialog" id="borrarRubrica">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Borrar</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>¿Seguro que quieres borrar esta rubrica?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" value="default" id="deleteButton" onclick="deleteRubrica()"><i class="fas fa-trash    "></i> Borrar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="../../js/Request/index.js"></script>
+      <script src="../../js/api/rubricaapi.js"></script>
+      <script src="../../js/api/groupsapi.js"></script>
+      <script>
+        let  rubricas = [];
       let rubricasList = document.getElementById("rubricasList");
       async function loadRubricas() {
-        let resp = await Request.get("/api/rubricas");
+        //let resp = await Request.get('/api/rubricas');
+        let curso_name = document.getElementById("searchcurso").value,
+          f_name = document.getElementById("f_name").value;
+        console.log(f_name);
+        let resp = await RubricasApi.getRubricas(f_name, curso_name);
         rubricas = await resp.json();
         rubricasList.innerHTML = rubricas
           .map(
             (rubrica) => `
         <tr> 
-          <td><b>${rubrica.uid}</b></td>
+          <td><b>${rubrica.nombre}</b></td>
           <td>${rubrica.curso}</td>
           <td><span class="badge badge-secondary">${rubrica.fecha}</span></td>
           <td> 
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-outline-primary"><i class="fas fa-pen    "></i></button>
-              <button type="button" class="btn btn-outline-info"><i class="fas fa-search    "></i></button>
-              <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash    "></i></button>
+              <a role="button" class="btn btn-outline-primary" href="/rubricas/editar/${rubrica.uid}"><i class="fas fa-pen    "></i></a>
+              <a role="button" class="btn btn-outline-info" href="/rubricas/${rubrica.uid}"><i class="fas fa-search    "></i></a>
+              <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#borrarRubrica"
+              onclick="deleteProduct('${rubrica.uid}')"><i class="fas fa-trash    "></i></button>
             </div> 
           </td>
           </tr>`
           )
           .join("");
       }
+
+      async function deleteRubrica()
+      {
+        let rubricaid = document.getElementById("deleteButton").value;
+        let endpoint = "/api/rubricas/" + rubricaid;
+        let response = await Request.delete(endpoint);
+        let resp = await response.json();
+        console.log(resp);
+      }
+
+      function deleteProduct(id)
+      {
+        const targetButton = document.getElementById("deleteButton");
+        targetButton.value = id;
+      }
+      let gruposdeprofe = [];
+      async function loadGroups() {
+        let response = await GroupsAPI.getGroups();
+        if (response.status == 200) {
+          let groups = await response.json();
+          let activeGroups = [],
+            closedGroups = [],
+            userTypes = {
+              1: "Estudiante",
+              2: "Profesor",
+            };
+          groups.forEach((group) => {
+            if (group.published) 
+            {
+              activeGroups.push(group);
+              gruposdeprofe.push(group.title);
+            }
+            else closedGroups.push(group);
+          }
+          ); 
+          let selectElement = document.getElementById("searchcurso");
+          gruposdeprofe.forEach((group) => {
+            let option = document.createElement("option");
+            option.text = group;
+            option.value = group;
+            selectElement.add(option);
+          })
+        }
+          else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+
+
+         }
+      loadGroups();
+         
+
       loadRubricas();
     </script>
     <!-- Optional JavaScript -->

@@ -85,5 +85,25 @@ app.use(
   "/rubricas",
   express.static(path.join(__dirname, "/public/html/rubricas"))
 );
+app.use(
+  "/rubricas/:id",
+  express.static(path.join(__dirname, "/public/html/rubricas/detallerubrica"))
+);
 
+app.use(
+  "/rubricas",
+  express.static(path.join(__dirname, "/public/html/rubricas"))
+);
+
+app.use(
+  "/rubricas/crearRubrica",
+  express.static(path.join(__dirname, "/public/html/rubricas/crearRubricas"))
+);
+
+app.use(
+  "/rubricas/editar/:id",
+  express.static(path.join(__dirname, "/public/html/rubricas/editarRubrica"))
+);
+
+app.use("/api/rubricas", rubricaRoute);
 app.listen(port, () => console.log(`Running on http://localhost:${port}`));
