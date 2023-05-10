@@ -35,7 +35,7 @@
         </li>
       </ol>
     </nav>
-    <div class="px-3">
+    <div class="px-3 pb-5">
       <h1>Participantes</h1>
 
       <div id="addStudentDiv" class="d-flex justify-content-end">
@@ -49,35 +49,7 @@
         </button>
       </div>
 
-      <div id="students">
-        <div class="card my-2 p-3">
-          <h5>Mauricio Noriega Monarrez</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card my-2 p-3">
-          <h5>Humberto Longoria</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card my-2 p-3">
-          <h5>Gabriel Olvera</h5>
-          <p>Estudiante desde 15/01/2023</p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      <div id="studentsList"></div>
       <div
         class="modal fade"
         id="addStudent"
@@ -218,20 +190,22 @@
         } else {
           window.location.replace("/");
         }
-        let studentsResponse = await GroupsAPI.getUsersNotInGroup(codigo);
-        if (studentsResponse.status == 200) {
-          let students = await studentsResponse.json();
-          student_id.innerHTML =
-            '<option value="">Selecciona un estudiante</option>' +
-            students.map(
-              (student) =>
-                `<option value="${student._id}">${student.name} ${student.lastname}</option>`
-            );
-        } else if (response.status == 400) {
-          alert("Ha ocurrido un error. Intenta más tarde");
-          window.location.replace("/home");
-        } else {
-          window.location.replace("/");
+        if (usertype == 2) {
+          let studentsResponse = await GroupsAPI.getUsersNotInGroup(codigo);
+          if (studentsResponse.status == 200) {
+            let students = await studentsResponse.json();
+            student_id.innerHTML =
+              '<option value="">Selecciona un estudiante</option>' +
+              students.map(
+                (student) =>
+                  `<option value="${student._id}">${student.name} ${student.lastname}</option>`
+              );
+          } else if (response.status == 400) {
+            alert("Ha ocurrido un error. Intenta más tarde");
+            window.location.replace("/home");
+          } else {
+            window.location.replace("/");
+          }
         }
       }
 

@@ -1,28 +1,31 @@
-const router = require('express').Router();
-const {Rubrica} = require('../database/rubrics');
-const nanoid = require('nanoid');
-const {validateRubricPost} = require('../middlewares/validation');
+const router = require("express").Router();
+const { Rubrica } = require("../database/rubrics");
+const nanoid = require("nanoid");
+const { validateRubricPost } = require("../middlewares/validation");
 const jwt = require("jsonwebtoken");
 const {
-    isLogged,
-    onlyAdmin,
-    teacherPermissions,
-    isStudentOrTeacher,
-  } = require("../middlewares");
+  isLogged,
+  onlyAdmin,
+  teacherPermissions,
+  isStudentOrTeacher,
+} = require("../middlewares");
 
-
-router.get('/', isLogged, async (req, res) => {
-    let teacherToken = req.get("x-auth"),
+router.get("/", isLogged, async (req, res) => {
+  let teacherToken = req.get("x-auth"),
     teacher = jwt.decode(teacherToken);
-    try {
-
-        let rubricas = await Rubrica.getRubricaByEmail(teacher.email);
-        res.send(rubricas); 
-    }
-    catch (e) {
-        res.status(400).send("An error has occurred");
-      }
-    //res.status(200).send({Repuesta: "this is actually working"});
+  let { fecha, curso, nombre } = req.query;
+  let filters = { owner: teacher.email };
+  if (fecha) filters.fecha = new RegExp(fecha, "i");
+  if (curso) filters.curso = new RegExp(curso, "i");
+  if (nombre) filters.nombre = new RegExp(nombre, "i");
+  try {
+    let rubricas = await Rubrica.getTeacherRubricas(filters);
+    res.send(rubricas);
+  } catch (e) {
+    console.log(e);
+    res.status(400).send("An error has occurred");
+  }
+  //res.status(200).send({Repuesta: "this is actually working"});
 });
 
 router.get("/:id", teacherPermissions, async (req, res) => {
@@ -31,12 +34,14 @@ router.get("/:id", teacherPermissions, async (req, res) => {
 });
 
 router.post("/", teacherPermissions, async (req, res) => {
-  let { nombre,preguntas, owner, curso} = req.body;
+  let teacherToken = req.get("x-auth"),
+    teacher = jwt.decode(teacherToken);
+  let { nombre, preguntas, curso } = req.body;
   let errors = [];
-  if(!nombre) errors.push("Nombre");
-  if(!preguntas) errors.push("Preguntas");
-  if(!owner) errors.push("Owner");
-  if(!curso) errors.push("Curso");
+  if (!nombre) errors.push("Nombre");
+  if (!preguntas) errors.push("Preguntas");
+  if (!teacher) errors.push("Owner");
+  if (!curso) errors.push("Curso");
   if (errors.length > 0) {
     res
       .status(400)
@@ -49,10 +54,10 @@ router.post("/", teacherPermissions, async (req, res) => {
     uid: nanoid.nanoid(),
     nombre,
     preguntas,
-    owner,
+    owner: teacher.email,
     curso,
   });
-  res.status(201).send({ Repuesta: "se ha posteado esta rubrica" });
+  res.status(201).send(newdoc);
 });
 
 router.delete("/:id", teacherPermissions, async (req, res) => {
@@ -60,9 +65,20 @@ router.delete("/:id", teacherPermissions, async (req, res) => {
   res.send(deletedDoc);
 });
 
-router.put("/:id",teacherPermissions, async (req, res) => {
-  let { nombre,preguntas, owner, curso } = req.body;
-  let updatedDoc = await Rubrica.actualizarRubrica(req.params.id, req.body);
+router.put("/:id", teacherPermissions, async (req, res) => {
+  let teacherToken = req.get("x-auth"),
+    teacher = jwt.decode(teacherToken);
+  let updatedRubrica = {};
+  let { nombre, preguntas, curso } = req.body;
+  if (nombre) updatedRubrica.nombre = nombre;
+  if (preguntas) updatedRubrica.preguntas = preguntas;
+  if (curso) updatedRubrica.curso = curso;
+  updatedRubrica.fecha = Date.now();
+  updatedRubrica.owner = teacher.email;
+  let updatedDoc = await Rubrica.actualizarRubrica(
+    req.params.id,
+    updatedRubrica
+  );
   res.send(updatedDoc);
 });
 

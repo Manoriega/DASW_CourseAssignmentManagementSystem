@@ -39,19 +39,64 @@ const groupSchema = mongoose.Schema({
 });
 
 groupSchema.statics.getGroups = async (filters = {}) => {
-  let docs = await Groups.find(filters);
+  let docs = await Groups.find(filters)
+    .populate({
+      path: "teacher",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "students",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "assignments",
+      model: "assignments",
+      select: "_id title description dueDate rubricId creationDate",
+    });
   return docs;
 };
 
 groupSchema.statics.getGroupsFromArray = async (groups) => {
   let docs = await Groups.find({
     uid: { $in: groups },
-  });
+  })
+    .populate({
+      path: "teacher",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "students",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "assignments",
+      model: "assignments",
+      select: "_id title description dueDate rubricId creationDate",
+    });
   return docs;
 };
 
 groupSchema.statics.getGroupById = async (uid) => {
-  let group = await Groups.findOne({ uid });
+  let group = await Groups.findOne({ uid })
+    .populate({
+      path: "teacher",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "students",
+      model: "users",
+      select: "_id uid name lastname email usertype",
+    })
+    .populate({
+      path: "assignments",
+      model: "assignments",
+      select: "_id title description dueDate rubricId creationDate",
+    });
   return group;
 };
 

@@ -16,6 +16,13 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <nav aria-label="breadcrumb">
@@ -27,7 +34,9 @@
         <li class="breadcrumb-item">
           <a id="assignmentLink">Tarea</a>
         </li>
-        <li class="breadcrumb-item"><a id="entriesLink">Entregas</a></li>
+        <li id="entriesLi" class="breadcrumb-item">
+          <a id="entriesLink">Entregas</a>
+        </li>
         <li
           id="entrieNameLink"
           class="breadcrumb-item active"
@@ -37,50 +46,90 @@
         </li>
       </ol>
     </nav>
-    <div class="px-3">
+    <div class="px-3 pb-5">
       <div class="d-flex justify-content-between align-items-center pr-5">
-        <h2 id="assignmentName">Nombre de la tarea</h2>
+        <h2 id="assignmentName"></h2>
       </div>
       <hr />
       <p>
         <strong>Fecha de entregado: </strong>
-        <span id="assignmentDate">2023/04/28</span>
+        <span id="entryDate"></span>
       </p>
       <p>
         <strong>Entregado por: </strong>
-        <span id="entryStudent">Mauricio Noriega Monarrez</span>
+        <span id="entryStudent"></span>
+      </p>
+      <p id="reviewerInfo">
+        <strong>Evaluador: </strong>
+        <span id="reviewerStudent"></span>
+      </p>
+      <p id="finalScoreP">
+        <strong>Calificación final: </strong>
+        <span id="finalScore"></span>
       </p>
       <hr />
 
       <div class="form-group">
         <p>
           <b>Entrega: </b>
-          <a href="" id="downloadLink">NoriegaMonarrez_20230413</a>
+          <a id="downloadLink"></a>
         </p>
-        <a
+        <!-- <a
           href="/cursos/1/tareas/1/entregas/1/evaluar"
           class="btn btn-outline-primary"
           >Evaluar</a
-        >
-        <form id="teacherEvaluateForm" class="">
-          <div class="form-group">
-            <label for="teacher_score">Calificación del maestro:</label>
+        > -->
+        <div id="teacherInfo">
+          <p id="studentScoreP">
+            <strong>Calificación del evaluador: </strong>
+            <span id="studentScore"></span>
+          </p>
+          <strong id="studentScoreMsg" class="d-none">
+            No se puede calificar hasta que el evaluador califique
+          </strong>
+          <form id="teacherEvaluateForm">
+            <div class="form-group">
+              <label for="score">Ingresar Calificación:</label>
+              <input
+                type="number"
+                class="form-control col-1"
+                id="score"
+                name="score"
+                min="0"
+                max="10"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="commentsInput">Comentarios:</label>
+              <textarea
+                class="form-control col-3"
+                id="commentsInput"
+                name="commentsInput"
+                rows="4"
+              ></textarea>
+            </div>
             <input
-              type="number"
-              class="form-control col-1"
-              id="teacher_score"
-              name="teacher_score"
-              min="0"
-              max="10"
-              required
+              type="submit"
+              id="submitBtn"
+              value="Calificar"
+              class="btn btn-outline-success"
             />
+          </form>
+        </div>
+        <div id="teacherCommentsDiv" class="d-none">
+          <div class="row">
+            <div class="col-md-12">
+              <p class="blockquote">
+                <i class="fas fa-quote-left"></i>
+                <em id="teacherComments"></em>
+                <i class="fas fa-quote-right"></i>
+                <br />
+                <cite id="teacherName"></cite>
+              </p>
+            </div>
           </div>
-          <input
-            type="submit"
-            value="Calificar"
-            class="btn btn-outline-success"
-          />
-        </form>
+        </div>
       </div>
     </div>
     <!-- Optional JavaScript -->
@@ -101,5 +150,109 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="/public/js/common/index.js"></script>
+    <script src="/public/js/request/index.js"></script>
+    <script src="/public/js/api/assignmentsapi.js"></script>
+    <script src="/public/js/api/groupsapi.js"></script>
+    <script>
+      let usertype = localStorage.getItem("usertype");
+      if (usertype == 1) {
+        teacherInfo.classList.add("d-none");
+        reviewerInfo.classList.add("d-none");
+      }
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        groupId = partesURL[partesURL.length - 6],
+        assignmentId = partesURL[partesURL.length - 4],
+        entryId = partesURL[partesURL.length - 2];
+
+      async function loadEntry() {
+        let response = await AssignmentsAPI.getEntry(entryId);
+        if (response.status == 200) {
+          let entry = await response.json();
+          console.log(entry);
+          entryDate.innerText = formatDate(entry.creationDate);
+          entryStudent.innerText = `${entry.studentDeliver.name} ${entry.studentDeliver.lastname}`;
+          reviewerStudent.innerText = `${entry.reviewer.name} ${entry.reviewer.lastname}`;
+          downloadLink.innerText = entry.fileName;
+          downloadLink.href = `/api/assignments/download/${entryId}`;
+          finalScore.innerText = entry.finalScore ?? "No se ha evaluado";
+          studentScore.innerText = entry.studentScore ?? "No se ha evaluado";
+          if (!entry.studentScore) {
+            $("#score").prop("disabled", true);
+            $("#commentsInput").prop("disabled", true);
+            $("#submitBtn").prop("disabled", true);
+            studentScoreMsg.classList.remove("d-none");
+          }
+          if (entry.teacherScore) {
+            teacherInfo.classList.add("d-none");
+          }
+          if (entry.comments) {
+            teacherCommentsDiv.classList.remove("d-none");
+            teacherComments.innerText = entry.comments;
+          }
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadAssignment() {
+        let response = await AssignmentsAPI.getAssignment(assignmentId);
+        if (response.status == 200) {
+          let assignment = await response.json();
+          assignmentLink.innerText = assignment.title;
+          assignmentLink.href = `/cursos/${groupId}/tareas/${assignmentId}`;
+          assignmentName.innerText = assignment.title;
+          entriesLink.href = `/cursos/${groupId}/tareas/${assignmentId}/entregas`;
+          loadEntry();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadGroup() {
+        let response = await GroupsAPI.getGroup(groupId);
+        if (response.status == 200) {
+          let group = await response.json();
+          courseLink.innerText = group.title;
+          courseLink.href = `/cursos/${group.uid}`;
+          assignmentsLink.href = `/cursos/${group.uid}/tareas`;
+          teacherName.innerText = `- ${group.teacher.name} ${group.teacher.lastname}`;
+          loadAssignment();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      loadGroup();
+
+      let teacherEvaluateForm = document.getElementById("teacherEvaluateForm");
+      teacherEvaluateForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let teacherScore = score.value;
+        let comments = commentsInput.value;
+
+        let response = await AssignmentsAPI.teacherReview(entryId, {
+          teacherScore,
+          comments,
+        });
+        if (response.status == 200) {
+          loadGroup();
+        } else {
+          alert("Ha ocurrido un error");
+          window.location.replace(`/cursos/${groupId}/tareas/${assignmentId}`);
+        }
+      });
+    </script>
   </body>
 </html>

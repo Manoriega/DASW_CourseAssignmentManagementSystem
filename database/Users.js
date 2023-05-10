@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.statics.getUsers = async (filters = {}) => {
   let docs = await Users.find(filters, {
-    _id: 0,
+    _id: 1,
     uid: 1,
     name: 1,
     lastname: 1,
@@ -47,7 +47,7 @@ userSchema.statics.getUsers = async (filters = {}) => {
   return docs;
 };
 
-userSchema.statics.getUserById = async (uid) => {
+userSchema.statics.getUserByUid = async (uid) => {
   let user = await Users.findOne(
     { uid },
     {
@@ -63,10 +63,15 @@ userSchema.statics.getUserById = async (uid) => {
   return user;
 };
 
+userSchema.statics.getUserById = async (id) => {
+  let user = await Users.findById(id);
+  return user;
+};
+
 userSchema.statics.getUserByEmail = async (email) => {
   let user = await Users.findOne(
     { email },
-    { _id: 0, uid: 1, email: 1, password: 1, usertype: 1 }
+    { _id: 1, uid: 1, email: 1, password: 1, usertype: 1 }
   );
   return user;
 };
@@ -90,18 +95,18 @@ userSchema.statics.deleteUser = async (uid) => {
   return deletedUser;
 };
 
-userSchema.statics.addGroup = async (uid, groupId) => {
-  let updatedUser = await Users.findOneAndUpdate(
-    { uid },
+userSchema.statics.addGroup = async (id, groupId) => {
+  let updatedUser = await Users.findByIdAndUpdate(
+    id,
     { $push: { groups: groupId } },
     { new: true }
   );
   return updatedUser;
 };
 
-userSchema.statics.removeGroup = async (uid, groupId) => {
-  let updatedUser = await Users.findOneAndUpdate(
-    { uid },
+userSchema.statics.removeGroup = async (id, groupId) => {
+  let updatedUser = await Users.findByIdAndUpdate(
+    id,
     { $pull: { groups: groupId } },
     { new: true }
   );

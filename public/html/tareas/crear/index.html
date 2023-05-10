@@ -27,17 +27,17 @@
         <li class="breadcrumb-item active" aria-current="page">Crear</li>
       </ol>
     </nav>
-    <div class="px-3">
-      <h1>Crear Tarea</h1>
+    <div class="px-3 pb-5">
+      <h1 id="titleAction">Crear Tarea</h1>
       <div class="container">
         <form id="createAssignmentForm">
           <div class="form-group">
-            <label for="name">Nombre de la tarea</label>
+            <label for="title">Nombre de la tarea</label>
             <input
               type="text"
               class="form-control"
-              id="name"
-              name="name"
+              id="title"
+              name="title"
               maxlength="100"
               required
             />
@@ -48,33 +48,30 @@
               class="form-control"
               id="description"
               name="description"
-              maxlength="497"
+              rows="4"
               required
             ></textarea>
           </div>
           <div class="form-group">
-            <label for="end_date">Fecha de Entrega</label>
+            <label for="dueDate">Fecha de Entrega</label>
             <input
               type="datetime-local"
               class="form-control"
-              id="end_date"
-              name="end_date"
+              id="dueDate"
+              name="dueDate"
               required
             />
           </div>
           <div class="form-group">
-            <label for="rubric_id">Rubrica</label>
-            <select
-              class="form-control"
-              id="rubric_id"
-              name="rubric_id"
-              required
-            >
+            <label for="rubricId">Rubrica</label>
+            <select class="form-control" id="rubricId" name="rubricId" required>
               <option value="">Seleccionar Rubrica</option>
-              <option value="1">Rubrica 1</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Crear tarea</button>
+          <input type="hidden" name="groupId" id="groupId" />
+          <button id="submitBtn" type="submit" class="btn btn-primary">
+            Crear tarea
+          </button>
         </form>
       </div>
     </div>
@@ -95,5 +92,126 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <script src="/public/js/request/index.js"></script>
+    <script src="/public/js/api/groupsapi.js"></script>
+    <script src="/public/js/api/assignmentsapi.js"></script>
+    <script>
+      let usertype = localStorage.getItem("usertype");
+      if (!usertype || usertype != 2) window.location.replace("/home");
+      let url = window.location.href,
+        partesURL = url.split("/"),
+        action = partesURL[partesURL.length - 2],
+        titles = { crear: "Crear", editar: "Editar" },
+        codigo = "",
+        assignmentId = "";
+
+      titleAction.innerText = titles[action] + " Tarea";
+      submitBtn.innerText = titles[action] + " Tarea";
+
+      if (action == "crear") {
+        codigo = partesURL[partesURL.length - 4];
+      } else {
+        codigo = partesURL[partesURL.length - 5];
+      }
+      groupId.value = codigo;
+
+      async function loadAssignment(id) {
+        let response = await AssignmentsAPI.getAssignment(id);
+
+        if (response.status == 200) {
+          let assignment = await response.json();
+          title.value = assignment.title;
+          description.value = assignment.description;
+          let date = new Date(assignment.dueDate);
+          const formattedDateString = `${date.getFullYear()}-${(
+            date.getMonth() + 1
+          )
+            .toString()
+            .padStart(2, "0")}-${date
+            .getDate()
+            .toString()
+            .padStart(2, "0")}T${date
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${date
+            .getMinutes()
+            .toString()
+            .padStart(2, "0")}`;
+          dueDate.value = formattedDateString;
+          rubricId.value = assignment.rubricId._id;
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadRubrics() {
+        let response = await Request.get("/api/rubricas/");
+        if (response.status == 200) {
+          let rubrics = await response.json();
+          rubricId.innerHTML =
+            '<option value="">Seleccionar Rubrica</option>' +
+            rubrics.map(
+              (rubric) =>
+                `<option value="${rubric._id}">${rubric.nombre}</option>`
+            );
+          if (action == "editar") {
+            $("#rubricId").prop("disabled", true);
+            assignmentId = partesURL[partesURL.length - 3];
+            loadAssignment(assignmentId);
+          }
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      async function loadGroup() {
+        let response = await GroupsAPI.getGroup(codigo);
+        if (response.status == 200) {
+          let group = await response.json();
+          courseLink.innerText = group.title;
+          courseLink.href = `/cursos/${group.uid}`;
+          assignmentsLink.href = `/cursos/${group.uid}/tareas`;
+          loadRubrics();
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      }
+
+      let createAssignmentForm = document.getElementById(
+        "createAssignmentForm"
+      );
+      createAssignmentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let formData = new FormData(createAssignmentForm);
+        let assignment = Object.fromEntries(formData.entries());
+
+        let response =
+          action == "crear"
+            ? await AssignmentsAPI.createAssignment(assignment)
+            : await AssignmentsAPI.updateAssignment(assignmentId, assignment);
+        if (response.status == 201) {
+          let data = await response.json();
+          window.location.replace(`/cursos/${codigo}/tareas`);
+        } else if (response.status == 400) {
+          alert("Ha ocurrido un error. Intenta más tarde");
+          window.location.replace("/home");
+        } else {
+          window.location.replace("/");
+        }
+      });
+
+      loadGroup();
+    </script>
   </body>
 </html>

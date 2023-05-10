@@ -1,7 +1,7 @@
 @groups = http://localhost:3000/api/groups
 @auth = http://localhost:3000/api/auth
 @users = http://localhost:3000/api/users
-@host = http://localhost:3000/
+@host = http://localhost:3000
 
 
 // GROUPS ============================================================================================================
@@ -74,14 +74,13 @@ x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ
 ###
 POST {{users}}
 Content-Type: application/json
-x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRhc3cubXgiLCJ1aWQiOiJWam5pQ3NRUmJjaTlyT1VMSmNuZzkiLCJ1c2VydHlwZSI6MywiaWF0IjoxNjgyNzIzNDczfQ.Z17U72F-nOjAJhbQ9XBD5LTV-m0xMHWdpe0tdAf3qqY
 
 {
-    "name": "Mauricio",
-    "lastname": "Noriega Monarrez",
-    "email": "pedrogonzales@iteso.mx",
-    "password": "pedro",
-    "usertype": 1
+    "name": "Admin",
+    "lastname": " ",
+    "email": "admin@dasw.mx",
+    "password": "admin",
+    "usertype": 3
 }
 
 ###
@@ -223,3 +222,41 @@ Content-Type: application/json
     "owner":"nerdinvader67@gmail.com",
     "curso":"Requerimientos de software"
 }
+
+
+// ===================================================================================================
+// Asignments 
+
+// Ver tarea
+###
+GET {{host}}/api/assignments/64571f49ad5d2280125d6e02
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8
+
+// Editar tarea
+###
+PUT {{host}}/api/assignments/64571f49ad5d2280125d6e02
+Content-Type: application/json
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8
+
+{
+  "title": "Primera entrega de requerimientos"
+}
+
+// Eliminar tarea
+###
+DELETE {{host}}/api/assignments/64571f49ad5d2280125d6e02
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGM1OTMwNTNmMmQ2M2E0MzA5MDIyYiIsImVtYWlsIjoicGVkcm9nb256YWxlc0BpdGVzby5teCIsInVpZCI6Im5KeWJoSHRuYzFyT1VNYzl2NUFTLSIsInVzZXJ0eXBlIjoyLCJpYXQiOjE2ODM0MzAzMjl9.YrV9YmjiOazc325TcolQ0Dtn6GLItr8BH7AFWhJ5Gj8
+
+
+###
+POST {{host}}api/auth
+Content-Type: application/json
+
+{
+    "email": "mauricio.noriega@iteso.mx",
+    "password": "Mauri1"
+}
+
+###
+GET {{host}}/api/assignments/toDo/l2KzokVG
+x-auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdXJpY2lvLm5vcmllZ2FAaXRlc28ubXgiLCJ1aWQiOiJLWURWRTFRX3JfVGVFZVlMc0lJamQiLCJ1c2VydHlwZSI6MSwiaWQiOiI2NDU3NGM0N2RiMTIyNWYwMWE1OGE4YjgiLCJpYXQiOjE2ODM0ODU2MTJ9.hW1HLHybVtmrmKNXbkilGlC4vK8Dac7K2-Kzta4se_Q

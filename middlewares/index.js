@@ -24,8 +24,8 @@ async function isStudentOrTeacher(req, res, next) {
         return;
       }
       let userD = decoded,
-        user = await Users.getUserById(userD.uid),
-        groupId = req.params.id || null;
+        user = await Users.getUserByUid(userD.uid),
+        groupId = req.params.groupId || null;
       if (user) {
         if (groupId) {
           if (user.groups.includes(groupId) || userD.usertype == 3) next();
@@ -35,7 +35,7 @@ async function isStudentOrTeacher(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
+    //console.log(e);
   }
 }
 
@@ -56,7 +56,7 @@ async function isLogged(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
+    //console.log(e);
   }
 }
 
@@ -79,7 +79,7 @@ async function teacherPermissions(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
+    //console.log(e);
   }
 }
 
@@ -125,7 +125,7 @@ async function onlyAdmin(req, res, next) {
     });
   } catch (e) {
     res.status(400).send("An error has occurred");
-    console.log(e);
+    //console.log(e);
   }
 }
 
