@@ -275,10 +275,10 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
-    <script src="../../../js/Request/index.js"></script>
-    <script src="../../../js/api/usersapi.js"></script>
-    <script src="../../../js/api/groupsapi.js"></script>
-    <script src="../../../js/api/authapi.js"></script>
+    <script src="/public/js/Request/index.js"></script>
+    <script src="/public/js/api/usersapi.js"></script>
+    <script src="/public/js/api/groupsapi.js"></script>
+    <script src="/public/js/api/authapi.js"></script>
     <script>
       let modalType = "post",
         userId = 0,
@@ -458,7 +458,11 @@
       }
 
       async function deleteUser(id) {
-        await UsersAPI.deleteUser(id);
+        let response = await UsersAPI.deleteUser(id);
+        if (response.status == 400) {
+          let data = await response.json();
+          if (data.msg) alert("El maestro seleccionado tiene grupos activos");
+        }
         getUsersL();
       }
 

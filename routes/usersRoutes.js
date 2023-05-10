@@ -118,8 +118,17 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
   try {
     let user = await Users.getUserByUid(req.params.id);
     if (user) {
-      await Users.deleteUser(req.params.id);
-      await Groups.deleteStudent(req.params.id);
+      if (user.usertype == 1) {
+        await Users.deleteUser(req.params.id);
+        await Groups.deleteStudent(req.params.id);
+      } else {
+        if (user.groups.length >= 1) {
+          res.status(400).json({ msg: "Teacher has groups" });
+          return;
+        } else {
+          await Users.deleteUser(req.params.id);
+        }
+      }
       res.send("User deleted");
     } else res.status(404).send("User not found");
   } catch (e) {
