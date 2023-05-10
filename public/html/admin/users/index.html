@@ -458,7 +458,11 @@
       }
 
       async function deleteUser(id) {
-        await UsersAPI.deleteUser(id);
+        let response = await UsersAPI.deleteUser(id);
+        if (response.status == 400) {
+          let data = await response.json();
+          if (data.msg) alert("El maestro seleccionado tiene grupos activos");
+        }
         getUsersL();
       }
 

@@ -136,11 +136,13 @@ router.put("/:id", onlyAdmin, async (req, res) => {
 router.delete("/:id", onlyAdmin, async (req, res) => {
   try {
     let group = await Groups.getGroupById(req.params.id);
+    await Users.removeGroup(group.teacher._id, req.params.id);
     if (group) {
       let mongoResponse = await Groups.deleteGroup(req.params.id);
       res.send(mongoResponse);
     } else res.status(404).send("Group not found");
   } catch (e) {
+    console.log(e);
     res.status(400).send("An error has occurred");
   }
 });
