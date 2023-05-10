@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const dotenv = require("dotenv").config();
 const path = require("path");
 const groupRoutes = require("./routes/groupsRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -10,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const { onlyAdminLogged } = require("./middlewares/index");
 
 const app = express();
-const port = 3000;
+const port = proccess.env.PORT || 3000;
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
