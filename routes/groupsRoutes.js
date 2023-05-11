@@ -8,6 +8,7 @@ const {
   onlyAdmin,
   teacherPermissions,
   isStudentOrTeacher,
+  handleExceptions,
 } = require("../middlewares");
 
 // Obtener todos los grupos a los que pertenece el estudiante o profesor. O ver todos siendo administrador
@@ -29,7 +30,7 @@ router.get("/", isLogged, async (req, res) => {
         : await Groups.getGroupsFromArray(user.groups);
     res.send(groups);
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -43,11 +44,10 @@ router.post("/", onlyAdmin, async (req, res) => {
   if (!information) errors.push("Information");
   if (!teacher) errors.push("Teacher");
   if (errors.length > 0) {
-    res
-      .status(400)
-      .send(
-        "Bad request: " + errors.map((error) => `Missing ${error}`).join(". ")
-      );
+    handleError(
+      res,
+      "Bad request: " + errors.map((error) => `Falta ${error}`).join(". ")
+    );
     return;
   }
   let uid = nanoid.nanoid(8);
@@ -63,7 +63,7 @@ router.post("/", onlyAdmin, async (req, res) => {
     let mongoResponse = await Groups.createGroup(newGroup);
     res.status(201).send(mongoResponse);
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -79,7 +79,7 @@ router.put("/:id/published", onlyAdmin, async (req, res) => {
       res.send(mongoResponse);
     } else res.status(404).send("Group not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -95,7 +95,7 @@ router.delete("/:id/published", teacherPermissions, async (req, res) => {
       res.send(mongoResponse);
     } else res.status(404).send("Group not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -107,7 +107,7 @@ router.get("/:groupId", isStudentOrTeacher, async (req, res) => {
     if (group) res.send(group);
     else res.status(404).send("Group not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -127,7 +127,7 @@ router.put("/:id", onlyAdmin, async (req, res) => {
       res.status(201).send(mongoResponse);
     } else res.status(404).send("Group not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -142,8 +142,7 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
       res.send(mongoResponse);
     } else res.status(404).send("Group not found");
   } catch (e) {
-    console.log(e);
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -158,7 +157,7 @@ router.get("/:groupId/students", isStudentOrTeacher, async (req, res) => {
       res.send(students);
     } else res.status(404).send("Group not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -182,15 +181,14 @@ router.post(
         } else res.status(404).send("Student not found");
       } else res.status(404).send("Group not found");
     } catch (e) {
-      console.log(e);
-      res.status(400).send("An error has occurred");
+      handleExceptions(e, res);
     }
   }
 );
 
 // Eliminar estudiante a un grupo
 
-router.post(
+router.delete(
   "/:groupId/student/:studentId",
   teacherPermissions,
   async (req, res) => {
@@ -207,7 +205,7 @@ router.post(
         } else res.status(404).send("Student not found");
       } else res.status(404).send("Group not found");
     } catch (e) {
-      res.status(400).send("An error has occurred");
+      handleExceptions(e, res);
     }
   }
 );
@@ -220,8 +218,7 @@ router.get("/:id/studentsToAdd", teacherPermissions, async (req, res) => {
     });
     res.send(users);
   } catch (e) {
-    res.status(400).send("An error has ocurred");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 

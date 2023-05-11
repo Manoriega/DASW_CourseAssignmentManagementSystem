@@ -137,14 +137,16 @@
         assignmentId = partesURL[partesURL.length - 1];
       groupId.value = codigo;
       async function deleteAssignment() {
-        let response = await AssignmentsAPI.deleteAssignment(assignmentId);
-        if (response.status == 200) {
-          window.location.replace(`/cursos/${codigo}/tareas`);
-        } else if (response.status == 400) {
-          alert("Ha ocurrido un error. Intenta más tarde");
-          window.location.replace("/home");
-        } else {
-          window.location.replace("/");
+        if (window.confirm("¿Estás seguro de querer eliminar la tarea?")) {
+          let response = await AssignmentsAPI.deleteAssignment(assignmentId);
+          handleResponse(
+            () => {
+              alert("La tarea se ha eliminado correctamente");
+              window.location.replace(`/cursos/${codigo}/tareas`);
+            },
+            response,
+            200
+          );
         }
       }
 
@@ -164,6 +166,7 @@
           let assignment = await response.json();
           assignmentNameLink.innerText = assignment.title;
           assignmentName.innerText = assignment.title;
+          document.title = assignment.title;
           assignmentDate.innerText = formatDate(assignment.dueDate);
           assignmentDescription.innerText = assignment.description;
           entriesButton.href = `/cursos/${codigo}/tareas/${id}/entregas`;
@@ -207,10 +210,14 @@
           assignmentId,
           submit
         );
-        if (response.status == 201) {
-          alert("La tarea se ha entregado correctamente");
-          window.location.replace(`/cursos/${codigo}/tareas/`);
-        } else window.location.replace(`/home`);
+        handleResponse(
+          () => {
+            alert("La tarea se ha entregado correctamente");
+            window.location.replace(`/cursos/${codigo}/tareas/`);
+          },
+          response,
+          201
+        );
       });
 
       loadGroup();

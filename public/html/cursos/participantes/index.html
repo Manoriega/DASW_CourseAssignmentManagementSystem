@@ -127,18 +127,18 @@
       let usertype = localStorage.getItem("usertype");
 
       async function removeStudent(studentId) {
-        let url = window.location.href,
-          partesURL = url.split("/"),
-          groupId = partesURL[partesURL.length - 3];
-        let response = await GroupsAPI.removeStudentToGroup(studentId, groupId);
-        if (response.status == 201) {
-          $("#addStudent").modal("hide");
-          loadGroup();
-        } else if (response.status == 400) {
-          alert("Ha ocurrido un error. Intenta más tarde");
-          window.location.replace("/home");
-        } else {
-          window.location.replace("/");
+        if (window.confirm("¿Estás seguro de querer eliminar al estudiante?")) {
+          let url = window.location.href,
+            partesURL = url.split("/"),
+            groupId = partesURL[partesURL.length - 3];
+          let response = await GroupsAPI.removeStudentToGroup(
+            studentId,
+            groupId
+          );
+          if (response.status == 201) {
+            $("#addStudent").modal("hide");
+            loadGroup();
+          }
         }
       }
 

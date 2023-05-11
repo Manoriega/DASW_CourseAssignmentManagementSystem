@@ -32,6 +32,7 @@
       </ol>
     </nav>
     <div class="p-3">
+      <a id="backButton" class="btn btn-primary d-none" role="button">Atrás</a>
       <h1>Evaluación</h1>
       <h4>
         <a id="downloadFileLink">Descargar archivo</a>
@@ -64,6 +65,7 @@
     <script src="/public/js/api/assignmentsapi.js"></script>
     <script src="/public/js/api/groupsapi.js"></script>
     <script>
+      let usertype = localStorage.getItem("usertype");
       let url = window.location.href,
         partesURL = url.split("/"),
         entryId = partesURL[partesURL.length - 3],
@@ -91,9 +93,31 @@
         if (response.status == 200) {
           let entry = await response.json();
           downloadFileLink.href = `/api/assignments/reviewer/download/${entryId}`;
-          if (entry.studentScore) {
+          if (entry.studentScore && usertype != 2) {
             alert("Esta tarea ya ha sido evaluada");
             window.location.replace(`/cursos/${groupId}/tareas`);
+          }
+          if (entry.studentScore && usertype == 2) {
+            backButton.classList.remove("d-none");
+            backButton.href = window.location.href.replace("/evaluar/", "");
+            let cardBodies = document.querySelectorAll("#questionsList .card");
+            cardBodies.forEach((cardBody, index) => {
+              let radios = cardBody.querySelectorAll("input[type='radio']");
+              let reviewValue = entry.review[index];
+              let cardFooter = cardBody.querySelector(".card-footer");
+              cardFooter.classList.add("d-none");
+              reviewBtn.classList.add("d-none");
+
+              radios.forEach((radio) => {
+                radio.disabled = true;
+              });
+
+              if (reviewValue === true) {
+                radios[0].checked = true;
+              } else {
+                radios[1].checked = true;
+              }
+            });
           }
         } else window.location.replace("/home");
       }
@@ -103,11 +127,9 @@
         if (response.status == 200) {
           let assignment = await response.json(),
             questions = assignment.rubricId.preguntas;
-          await loadEntry();
           answers = questions.map((question, index) =>
             JSON.parse(`{"question": ${index + 1}, "answer": null}`)
           );
-          console.log(answers);
           questionsList.innerHTML = questions
             .map(
               (question, index) => `<div class="card mb-5">
@@ -143,6 +165,7 @@
         </div>`
             )
             .join("");
+          await loadEntry();
         } else window.location.replace("/home");
       }
       let reviewBtn = document.getElementById("reviewBtn");
@@ -162,9 +185,11 @@
           if (answer.answer) score++;
         });
         let percentage = score / max,
-          studentScore = 10 * percentage;
+          studentScore = 10 * percentage,
+          review = answers.map((answer) => answer.answer);
         let response = await AssignmentsAPI.studentReview(entryId, {
           studentScore,
+          review,
         });
         if (response.status == 200) {
           alert("La tarea ha sido evaluada correctamente");
