@@ -437,13 +437,17 @@
       }
 
       async function deleteGroup(id) {
-        await GroupsAPI.deleteGroup(id);
-        getGroupsL();
+        if (window.confirm("¿Estás seguro de querer eliminar el grupo?")) {
+          await GroupsAPI.deleteGroup(id);
+          getGroupsL();
+        }
       }
 
       async function closeGroup(id) {
-        await GroupsAPI.closeGroup(id);
-        getGroupsL();
+        if (window.confirm("¿Estás seguro de querer cerrar el grupo?")) {
+          await GroupsAPI.closeGroup(id);
+          getGroupsL();
+        }
       }
 
       async function openGroup(id) {

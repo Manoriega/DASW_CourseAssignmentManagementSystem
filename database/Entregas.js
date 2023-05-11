@@ -33,6 +33,10 @@ const entregaSchema = mongoose.Schema({
     type: String,
     default: null,
   },
+  review: {
+    type: [Boolean],
+    default: null,
+  },
   creationDate: {
     type: Date,
     default: Date.now,

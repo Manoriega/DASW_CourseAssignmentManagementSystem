@@ -13,3 +13,16 @@ function formatDate(dateString) {
 
   return `${day} de ${month} del ${year} a las ${hours}:${minutes} ${amPm}`;
 }
+
+async function handleResponse(func, response, successStatus) {
+  if (response.status == successStatus) {
+    func();
+  } else if (response.status == 400) {
+    let data = await response.json();
+    alert([data.errors]);
+  } else if (response.status == 500) {
+    window.location.replace("/");
+  } else {
+    alert("Ha ocurrido un error");
+  }
+}

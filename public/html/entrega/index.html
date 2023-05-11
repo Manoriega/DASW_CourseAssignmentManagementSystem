@@ -84,6 +84,13 @@
             <strong>Calificación del evaluador: </strong>
             <span id="studentScore"></span>
           </p>
+          <a
+            class="btn btn-primary"
+            id="evaluationLink"
+            role="button"
+            target="_blank"
+            >Ver evaluación</a
+          >
           <strong id="studentScoreMsg" class="d-none">
             No se puede calificar hasta que el evaluador califique
           </strong>
@@ -183,7 +190,7 @@
             $("#commentsInput").prop("disabled", true);
             $("#submitBtn").prop("disabled", true);
             studentScoreMsg.classList.remove("d-none");
-          }
+          } else evaluationLink.href = window.location.href + "evaluar";
           if (entry.teacherScore) {
             teacherInfo.classList.add("d-none");
           }
@@ -204,6 +211,7 @@
         if (response.status == 200) {
           let assignment = await response.json();
           assignmentLink.innerText = assignment.title;
+          document.title = assignment.title;
           assignmentLink.href = `/cursos/${groupId}/tareas/${assignmentId}`;
           assignmentName.innerText = assignment.title;
           entriesLink.href = `/cursos/${groupId}/tareas/${assignmentId}/entregas`;
