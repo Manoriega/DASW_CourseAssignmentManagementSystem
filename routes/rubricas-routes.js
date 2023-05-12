@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const { Rubrica } = require("../database/rubrics");
 const nanoid = require("nanoid");
+const {Assignments} = require("../database/Assignments");
+const {Entregas} = require("../database/Entregas");
 const { validateRubricPost } = require("../middlewares/validation");
 const jwt = require("jsonwebtoken");
 const {
@@ -68,13 +70,29 @@ router.post("/", teacherPermissions, async (req, res) => {
 });
 
 router.delete("/:id", teacherPermissions, async (req, res) => {
-  try {
-    let deletedDoc = await Rubrica.borrarRubrica(req.params.id);
-    res.send(deletedDoc);
-  } catch (e) {
-    handleExceptions(e, res);
+  let valid;
+  let rubrica = req.params.id;
+  let rubricaID = await Rubrica.getRubricaPrivateId(req.params.id);
+  let rubricaToFind = {rubricId: rubricaID};
+  let assignmentToFind = await Assignments.getAssignments(rubricaToFind);
+  console.log(assignmentToFind);
+    for(let i = 0; i < assignmentToFind.length; i++) {
+      let filter = {assignmentId : assignmentToFind[i]._id}
+      console.log(assignmentToFind[i]);
+      let alreadyentregado = await Entregas.getEntregas(filter)
+      if(alreadyentregado.length > 0) 
+        {
+          console.log(alreadyentregado);
+          res.status(400).send({Error: "No puedes borrar esta rubrica"});
+          return;
+        }
+    }
+
+      let deletedDoc = await Rubrica.borrarRubrica(req.params.id);
+      res.send(deletedDoc);
+    
   }
-});
+);
 
 router.put("/:id", teacherPermissions, async (req, res) => {
   try {
@@ -87,6 +105,22 @@ router.put("/:id", teacherPermissions, async (req, res) => {
     if (curso) updatedRubrica.curso = curso;
     updatedRubrica.fecha = Date.now();
     updatedRubrica.owner = teacher.email;
+
+    let rubricaID = await Rubrica.getRubricaPrivateId(req.params.id);
+  let rubricaToFind = {rubricId: rubricaID};
+  let assignmentToFind = await Assignments.getAssignments(rubricaToFind);
+  console.log(assignmentToFind);
+    for(let i = 0; i < assignmentToFind.length; i++) {
+      let filter = {assignmentId : assignmentToFind[i]._id}
+      console.log(assignmentToFind[i]);
+      let alreadyentregado = await Entregas.getEntregas(filter)
+      if(alreadyentregado.length > 0) 
+        {
+          console.log(alreadyentregado);
+          res.status(400).send({Error: "No puedes borrar esta rubrica"});
+          return;
+        }
+    }
     let updatedDoc = await Rubrica.actualizarRubrica(
       req.params.id,
       updatedRubrica

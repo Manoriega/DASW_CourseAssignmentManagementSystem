@@ -47,6 +47,13 @@ RubricSchema.statics.getTeacherRubricas = async (filters = {}) => {
   return docs;
 };
 
+RubricSchema.statics.getRubricaPrivateId = async (uid) =>
+{
+  let doc = await Rubrica.findOne({ uid });
+  console.log(doc);
+  return doc._id;
+}
+
 RubricSchema.statics.getRubricaById = async (uid) => {
   let doc = await Rubrica.findOne({ uid });
   console.log(doc);
