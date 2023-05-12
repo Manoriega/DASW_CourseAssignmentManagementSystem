@@ -4,7 +4,12 @@ const nanoid = require("nanoid");
 const jwt = require("jsonwebtoken");
 const { Users } = require("../database/Users");
 const { Groups } = require("../database/Groups");
-const { onlyAdmin, isLogged } = require("../middlewares");
+const {
+  onlyAdmin,
+  isLogged,
+  handleExceptions,
+  handleError,
+} = require("../middlewares");
 
 // Obtener mi usuario
 router.get("/myuser", isLogged, async (req, res) => {
@@ -15,7 +20,7 @@ router.get("/myuser", isLogged, async (req, res) => {
     if (user) res.send(user);
     else res.status(404).send("User not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -36,7 +41,7 @@ router.get("/", onlyAdmin, async (req, res) => {
     let users = await Users.getUsers(filters);
     res.send(users);
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -51,11 +56,10 @@ router.post("/", onlyAdmin, async (req, res) => {
   if (!password) errors.push("Password");
   if (!usertype) errors.push("User type");
   if (errors.length > 0) {
-    res
-      .status(400)
-      .send(
-        "Bad request: " + errors.map((error) => `Missing ${error}`).join(". ")
-      );
+    handleError(
+      res,
+      "Bad request: " + errors.map((error) => `Falta ${error}`).join(". ")
+    );
     return;
   }
   let encryptedPassword = bcrypt.hashSync(password, 8);
@@ -72,7 +76,7 @@ router.post("/", onlyAdmin, async (req, res) => {
     let mongoResponse = await Users.createUser(newUser);
     res.status(201).send(mongoResponse);
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -84,7 +88,7 @@ router.get("/:id", onlyAdmin, async (req, res) => {
     if (user) res.send(user);
     else res.status(404).send("User not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -101,14 +105,14 @@ router.put("/:id", onlyAdmin, async (req, res) => {
       if (email) userUpdated.email = email;
       if (password) userUpdated.password = password;
       if (!name && !lastname && !email && !password)
-        res.status(400).send("Bad request. Nothing to update");
+        handleError(res, "Bad request. Nada que actualizar");
       else {
         let mongoResponse = await Users.updateUser(req.params.id, userUpdated);
         res.send("User updated");
       }
     } else res.status(404).send("User not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -118,12 +122,21 @@ router.delete("/:id", onlyAdmin, async (req, res) => {
   try {
     let user = await Users.getUserByUid(req.params.id);
     if (user) {
-      await Users.deleteUser(req.params.id);
-      await Groups.deleteStudent(req.params.id);
+      if (user.usertype == 1) {
+        await Users.deleteUser(req.params.id);
+        await Groups.deleteStudent(req.params.id);
+      } else {
+        if (user.groups.length >= 1) {
+          handleError(res, "El profesor tiene grupos activos");
+          return;
+        } else {
+          await Users.deleteUser(req.params.id);
+        }
+      }
       res.send("User deleted");
     } else res.status(404).send("User not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -144,7 +157,7 @@ router.post("/password", isLogged, async (req, res) => {
       }
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 

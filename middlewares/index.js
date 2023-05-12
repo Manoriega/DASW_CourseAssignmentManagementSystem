@@ -1,6 +1,18 @@
 const jwt = require("jsonwebtoken");
 const { Users } = require("../database/Users");
 
+// Manejar excepciones
+function handleExceptions(e, res) {
+  handleExceptions(e, res);
+  res.status(500).send("Internal server error");
+  return;
+}
+
+// Manejar errores
+function handleError(res, msg) {
+  res.status(400).json({ errors: msg });
+}
+
 // Redireccionar si no está loggeado
 async function redirect(req, res, next) {
   if (req.originalUrl == "/") {
@@ -30,12 +42,12 @@ async function isStudentOrTeacher(req, res, next) {
         if (groupId) {
           if (user.groups.includes(groupId) || userD.usertype == 3) next();
           else res.status(401).send({ belongs: false });
-        } else res.status(400).send("Missing group id");
+        } else handleError(res, "Falta id de grupo");
       } else res.status(404).send("User not found");
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
-    //console.log(e);
+    handleExceptions(e, res);
+    res.status(500).send("Internal server error");
   }
 }
 
@@ -55,8 +67,8 @@ async function isLogged(req, res, next) {
       next();
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
-    //console.log(e);
+    handleExceptions(e, res);
+    res.status(500).send("Internal server error");
   }
 }
 
@@ -78,8 +90,8 @@ async function teacherPermissions(req, res, next) {
       else res.status(401).send("You don't have the permissions");
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
-    //console.log(e);
+    handleExceptions(e, res);
+    res.status(500).send("Internal server error");
   }
 }
 
@@ -124,8 +136,8 @@ async function onlyAdmin(req, res, next) {
       else next();
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
-    //console.log(e);
+    handleExceptions(e, res);
+    res.status(500).send("Internal server error");
   }
 }
 
@@ -136,4 +148,6 @@ module.exports = {
   isStudentOrTeacher,
   redirect,
   onlyAdminLogged,
+  handleError,
+  handleExceptions,
 };

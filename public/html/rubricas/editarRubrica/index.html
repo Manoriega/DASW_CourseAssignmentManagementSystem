@@ -159,7 +159,9 @@
         if (response.status == 200) {
           window.location.replace("/rubricas");
         } else if (response.status == 400) {
-          alert("Ha ocurrido un error. Intenta más tarde");
+          alert("No puedes editar esta rubrica porque ya hay una entrega asociada a ella");
+          window.location.replace("/rubricas");
+          
         } else {
           console.log("unexpected");
         }

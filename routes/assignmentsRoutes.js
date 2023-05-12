@@ -8,6 +8,8 @@ let {
   teacherPermissions,
   isStudentOrTeacher,
   isLogged,
+  handleError,
+  handleExceptions,
 } = require("../middlewares/index");
 const { Groups } = require("../database/Groups");
 const { Users } = require("../database/Users");
@@ -25,11 +27,10 @@ router.post("/", teacherPermissions, async (req, res) => {
   if (!rubricId) errors.push("Rubric Id");
   if (!groupId) errors.push("Group Id");
   if (errors.length > 0) {
-    res
-      .status(400)
-      .send(
-        "Bad request: " + errors.map((error) => `Missing ${error}`).join(". ")
-      );
+    handleError(
+      res,
+      "Bad request: " + errors.map((error) => `Falta ${error}`).join(". ")
+    );
     return;
   }
   let newAssignment = { title, description, dueDate, rubricId };
@@ -39,8 +40,7 @@ router.post("/", teacherPermissions, async (req, res) => {
     Groups.addAssignment(groupId, mongoResponse._id);
     res.status(201).send(mongoResponse);
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -56,13 +56,13 @@ router.post("/submit/:id", isLogged, async (req, res) => {
 
       if (!groupId) errors.push("User");
 
+      console.log(fields);
+
       if (errors.length > 0) {
-        res
-          .status(400)
-          .send(
-            "Bad request: " +
-              errors.map((error) => `Missing ${error}`).join(". ")
-          );
+        handleError(
+          res,
+          "Bad request: " + errors.map((error) => `Falta ${error}`).join(". ")
+        );
         return;
       }
 
@@ -70,6 +70,7 @@ router.post("/submit/:id", isLogged, async (req, res) => {
       let projectDir = path.join(__dirname, "..");
       let student = jwt.decode(req.get("x-auth"));
       let user = await Users.getUserById(student.id);
+
       let fileName =
         user.lastname.split(" ").join("") +
         user.name +
@@ -96,6 +97,7 @@ router.post("/submit/:id", isLogged, async (req, res) => {
           let reviewer = {};
           for (let i = 0; i < students.length; i++) {
             const studentL = students[i];
+            console.log(studentL);
             if (studentL._id == student.id) continue;
             let entries = await Entregas.getEntregas({
               assignmentId: req.params.id,
@@ -118,50 +120,8 @@ router.post("/submit/:id", isLogged, async (req, res) => {
       });
     });
   } catch (e) {
-    res.status(500).send("An error has occurred");
+    handleExceptions(e, res);
   }
-
-  /* try {
-    let { groupId, fileName } = req.body;
-    let errors = [];
-    if (!groupId) errors.push("Group id");
-    if (!fileName) errors.push("File name");
-    if (errors.length > 0) {
-      res
-        .status(400)
-        .send(
-          "Bad request: " + errors.map((error) => `Missing ${error}`).join(". ")
-        );
-      return;
-    }
-    let student = jwt.decode(req.get("x-auth"));
-    let group = await Groups.getGroupById(groupId);
-    let students = await Users.getUsers({ uid: { $in: group.students } });
-    let reviewer = {};    
-    for (let i = 0; i < students.length; i++) {
-      const studentL = students[i];
-      if (studentL._id == student.id) continue;
-      let entries = await Entregas.getEntregas({
-        assignmentId: req.params.id,
-        reviewer: studentL._id,
-      });
-      if (entries.length < 1) {
-        reviewer = studentL._id;
-        break;
-      }
-    }
-    let newEntrega = {
-      assignmentId: req.params.id,
-      studentDeliver: student.id,
-      reviewer,
-      fileName,
-    };
-    let mongoResponse = await Entregas.createEntrega(newEntrega);
-    res.status(201).send(mongoResponse);
-  } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
-  } */
 });
 
 // Descargar todas las entregas - Profesor
@@ -197,8 +157,7 @@ router.get("/download/all/:assignmentid", async (req, res) => {
     });
     archive.finalize();
   } catch (e) {
-    console.log(e);
-    res.status(500).send("Internal server error");
+    handleExceptions(e, res);
   }
 });
 
@@ -211,8 +170,7 @@ router.get("/download/:assignmentEntry", async (req, res) => {
       res.download(filePath);
     } else res.status(404).send("Entry not found");
   } catch (e) {
-    console.log(e);
-    res.status(500).send("Internal server error");
+    handleExceptions(e, res);
   }
 });
 
@@ -225,8 +183,7 @@ router.get("/reviewer/download/:assignmentEntry", async (req, res) => {
       res.download(filePath, "Entrega.pdf");
     } else res.status(404).send("Entry not found");
   } catch (e) {
-    console.log(e);
-    res.status(500).send("Internal server error");
+    handleExceptions(e, res);
   }
 });
 
@@ -260,8 +217,7 @@ router.get("/:id/entries", teacherPermissions, async (req, res) => {
       res.send(entries);
     } else res.status(404).send("Assignment not found");
   } catch (e) {
-    console.log(e);
-    res.status(500).send("Internal server error");
+    handleExceptions(e, res);
   }
 });
 
@@ -272,8 +228,7 @@ router.get("/entry/:id", isLogged, async (req, res) => {
     if (entry) res.send(entry);
     else res.status(404).send("Entry not found");
   } catch (e) {
-    console.log(e);
-    res.status(500).send("Internal server error");
+    handleExceptions(e, res);
   }
 });
 
@@ -296,8 +251,7 @@ router.put("/:id", teacherPermissions, async (req, res) => {
       res.status(201).send(mongoResponse);
     } else res.status(404).send("Assignment not found");
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -308,20 +262,23 @@ router.get("/:id", isLogged, async (req, res) => {
     if (assignment) res.send(assignment);
     else res.status(404).send("Assignment not found");
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
 // Eliminar tarea - Profesor
 router.delete("/:id", teacherPermissions, async (req, res) => {
   try {
-    let assignment = await Assignments.deleteAssignment(req.params.id);
-    if (assignment) res.send(assignment);
-    else res.status(404).send("Assignment not found");
+    let entregas = await Entregas.getEntregas({ assignmentId: req.params.id });
+    if (entregas.length <= 0) {
+      let assignment = await Assignments.deleteAssignment(req.params.id);
+      if (assignment) res.send(assignment);
+      else res.status(404).send("Assignment not found");
+    } else {
+      handleError(res, ["No se puede borrar. Ya existen entregas"]);
+    }
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -342,8 +299,7 @@ router.get("/group/:groupId/", isStudentOrTeacher, async (req, res) => {
     let assignments = await Assignments.getAssignments(filters);
     res.send(assignments);
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -351,12 +307,12 @@ router.get("/group/:groupId/", isStudentOrTeacher, async (req, res) => {
 router.put("/evaluate/reviewer/:id", isLogged, async (req, res) => {
   try {
     let studentScore = req.body.studentScore;
+    let review = req.body.review;
     if (!studentScore) {
       res.status(400).send("Missing score");
       return;
     }
     let entrega = await Entregas.getEntregaById(req.params.id);
-    console.log(entrega);
     if (entrega) {
       let studentToken = req.get("x-auth"),
         student = jwt.decode(studentToken);
@@ -364,14 +320,14 @@ router.put("/evaluate/reviewer/:id", isLogged, async (req, res) => {
         res.status(401).send("You're not authorized to review");
       } else {
         let mongoResponse = await Entregas.updateEntrega(req.params.id, {
-          studentScore,
+          studentScore: studentScore.toFixed(2),
+          review,
         });
         res.send(mongoResponse);
       }
     } else res.status(404).send("Entry not found");
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -397,13 +353,12 @@ router.put("/evaluate/teacher/:id", teacherPermissions, async (req, res) => {
         studentFinalScore = 2 * (mongoResponse.studentScore / 10),
         finalScore = teacherFinalScore + studentFinalScore;
       let finalScoreResponse = await Entregas.updateEntrega(req.params.id, {
-        finalScore,
+        finalScore: finalScore.toFixed(2),
       });
       res.send(finalScoreResponse);
     } else res.status(404).send("Entry not found");
   } catch (e) {
-    res.status(500).send("Internal server error");
-    console.log(e);
+    handleExceptions(e, res);
   }
 });
 
@@ -433,8 +388,7 @@ router.get("/done/:groupId", isStudentOrTeacher, async (req, res) => {
     }
     res.send(todo);
   } catch (e) {
-    console.log(e);
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -457,6 +411,9 @@ router.get("/toDo/:groupId", isStudentOrTeacher, async (req, res) => {
       if (req.query.dateStart) {
         let dateStart = new Date(req.query.dateStart);
         let dueDate = new Date(assignment.dueDate);
+        console.log(dueDate);
+        console.log(dateStart);
+        console.log(dueDate >= dateStart);
         match = match && dueDate >= dateStart;
       }
       if (req.query.dateEnd) {
@@ -484,8 +441,7 @@ router.get("/toDo/:groupId", isStudentOrTeacher, async (req, res) => {
     }
     res.send(todo);
   } catch (e) {
-    console.log(e);
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -512,8 +468,7 @@ router.get(
       }
       res.send(entries);
     } catch (e) {
-      console.log(e);
-      res.status(500).send("Internal server error");
+      handleExceptions(e, res);
     }
   }
 );
@@ -538,8 +493,7 @@ router.get("/toreview/:groupId", isStudentOrTeacher, async (req, res) => {
     }
     res.send(toreview);
   } catch (e) {
-    console.log(e);
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -554,11 +508,12 @@ router.get("/:id/entry", isLogged, async (req, res) => {
         assignmentId: assignment._id,
         studentDeliver: student.id,
       });
-      if (entry) res.send(entry[0]);
+      if (entry && entry.length == 1) res.send(entry[0]);
       else res.status(404).send("Entry not found");
-    }
-    res.status(404).send("Assignment not found");
-  } catch (e) {}
+    } else res.status(404).send("Assignment not found");
+  } catch (e) {
+    handleExceptions(e, res);
+  }
 });
 
 module.exports = router;

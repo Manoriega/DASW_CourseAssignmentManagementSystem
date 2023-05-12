@@ -38,13 +38,6 @@
       <div class="d-flex justify-content-between">
         <h4><u id="groupCode"></u></h4>
       </div>
-      <h3 id="groupStudentsLink" class="mt-5">
-        <u>
-          <a id="studentsLink" class="font-weight-normal text-dark"
-            >Participantes</a
-          >
-        </u>
-      </h3>
       <hr />
       <p class="display-4" id="groupName"></p>
       <hr />
@@ -53,6 +46,14 @@
         <strong>Información del curso</strong>
         <p id="groupDescription"></p>
       </div>
+
+      <h3 id="groupStudentsLink" class="mt-5">
+        <u>
+          <a id="studentsLink" class="font-weight-normal text-dark"
+            >Participantes</a
+          >
+        </u>
+      </h3>
 
       <h3 class="mt-5">
         <u>
@@ -161,6 +162,7 @@
           let group = await response.json();
           groupCode.innerText = group.code;
           groupName.innerText = group.title;
+          document.title = group.title;
           groupDescription.innerText = group.information;
           groupNameLink.innerText = group.title;
           studentsLink.href = `/cursos/${group.uid}/participantes`;

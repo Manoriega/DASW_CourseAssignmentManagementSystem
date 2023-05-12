@@ -1,6 +1,7 @@
 const { Users } = require("../database/Users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { handleExceptions } = require("../middlewares");
 
 const router = require("express").Router();
 
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
       res.send(decoded);
     });
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 
@@ -35,11 +36,10 @@ router.post("/", async (req, res) => {
   if (!password) errors.push("Password");
 
   if (errors.length > 0) {
-    res
-      .status(400)
-      .send(
-        "Bad request: " + errors.map((error) => `Missing ${error}`).join(". ")
-      );
+    handleError(
+      res,
+      "Bad request: " + errors.map((error) => `Falta ${error}`).join(". ")
+    );
     return;
   }
   try {
@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
       });
     } else res.status(404).send("Email not found");
   } catch (e) {
-    res.status(400).send("An error has occurred");
+    handleExceptions(e, res);
   }
 });
 

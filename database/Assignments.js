@@ -42,6 +42,11 @@ assignmentSchema.statics.createAssignment = async (assignment) => {
   return await newAssignment.save();
 };
 
+assignmentSchema.statics.getAssignmentByRubricaId = async (rubricId) => {
+  let assignment = await Assignments.find({rubricId}); 
+  return assignment;
+};
+
 assignmentSchema.statics.getAssignmentById = async (id, projection = {}) => {
   let assignment = await Assignments.findById(id, projection).populate({
     path: "rubricId",
