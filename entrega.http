@@ -1,4 +1,4 @@
-@host = http://localhost:3000
+@host = http://localhost:8000
 
 ###
 POST {{host}}/api/auth
@@ -39,8 +39,8 @@ POST {{host}}/api/auth
 Content-Type: application/json
 
 {
-    "email": "luis.fernando@iteso.mx",
-    "password": "Luisfer1"
+    "email": "javier.blake@iteso.mx",
+    "password": "Javier1"
 }
 
 ###
@@ -75,13 +75,11 @@ Content-Type: application/json
 //mostrar rubricas de usuario 
 ###
 GET {{host}}/api/rubricas/
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXMuZmVybmFuZG9AaXRlc28ubXgiLCJ1aWQiOiJ2NVZnRzRYeHFFWUE1Z0VVWXNKTnMiLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNjg1MDA2fQ.MMdCW9vnYWPdGEw4QTapKfOgHRFi5tEyloP4oIjCrEM
-
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imphdmllci5ibGFrZUBpdGVzby5teCIsInVpZCI6IjAxRHpMT2Fsd0g5d0I5aWJQb0ljciIsInVzZXJ0eXBlIjoyLCJpZCI6IjY0NWJkMjZiNTdjMDExZTc2MjJmZmJlMSIsImlhdCI6MTY4Mzg1NTI3NH0.WyLmyBRWIMc8GhZEjilzPe5UasBNn1j4tA1xcrM0Fj4
 //borrar una rubrica 
 ###
-DELETE {{host}}/api/rubricas/9O4YA6_6t8r3kAl2CPvWY
-x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlZHJvZ29uemFsZXNAaXRlc28ubXgiLCJ1aWQiOiJuSnliaEh0bmMxck9VTWM5djVBUy0iLCJ1c2VydHlwZSI6MiwiaWF0IjoxNjgzNDMxMjkzfQ.v-jTVZ7ezkdDrwCTwSmdhEUZmhj7aiGrcluAqZ0slaU
-
+DELETE {{host}}/api/rubricas/K4T7fKGes4mm_CwykZ2_0
+x-auth:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imphdmllci5ibGFrZUBpdGVzby5teCIsInVpZCI6IjAxRHpMT2Fsd0g5d0I5aWJQb0ljciIsInVzZXJ0eXBlIjoyLCJpZCI6IjY0NWJkMjZiNTdjMDExZTc2MjJmZmJlMSIsImlhdCI6MTY4Mzg1NTU2MH0.BHe8aTWr3Lrcqc895er6J7HVN9O0f0VmDE1zPzFuxYU
 //ver una rubrica en especifico:
 ###
 GET {{host}}/api/rubricas/D89BwMbS__5nDOnbLHYfy

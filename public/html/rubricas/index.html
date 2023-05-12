@@ -84,7 +84,7 @@
               <p>¿Seguro que quieres borrar esta rubrica?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" value="default" id="deleteButton" onclick="deleteRubrica()"><i class="fas fa-trash    "></i> Borrar</button>
+              <button type="button" class="btn btn-danger" value="default" id="deleteButton" onclick="deleteRubrica()" data-dismiss="modal"><i class="fas fa-trash    "></i> Borrar</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
@@ -130,6 +130,20 @@
         let response = await Request.delete(endpoint);
         let resp = await response.json();
         console.log(resp);
+        if(response.status == 400)
+        {
+          if(window.confirm("No puedes borrar esta rubrica porque ya hay una entrega asociada a ella"))
+          {
+            location.reload();
+          }
+          else 
+          {
+            location.reload();
+          }
+        }
+        else if(response.status == 200)
+          loadGroups();
+          loadRubricas();
       }
 
       function deleteProduct(id)

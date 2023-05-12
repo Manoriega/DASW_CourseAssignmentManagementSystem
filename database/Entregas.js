@@ -128,9 +128,5 @@ let Entregas = mongoose.model("entregas", entregaSchema);
 
 //Entregas.deleteEntrega("6457227a7b61c991cd7911c9");
 
-Entregas.getEntregas({
-  assignmentId: "645745a2c34ae784beac5e98",
-  reviewer: "6456a11b027b2f119f0c95ce",
-});
 
 module.exports = { Entregas };
