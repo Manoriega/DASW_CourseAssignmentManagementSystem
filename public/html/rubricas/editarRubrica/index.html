@@ -99,31 +99,31 @@
       async function loadRubrica() {
         let url = window.location.href,
           partesURL = url.split("/"),
-          codigo = partesURL[partesURL.length - 1];
+          codigo = partesURL[partesURL.length - 2];
         let urllink = "/api/rubricas/" + codigo;
         let response = await Request.get(urllink);
         if (response.status == 200) {
           let resp = await response.json();
           console.log(resp);
           let nombreinput = document.getElementById("nombrerubrica");
-          nombreinput.value = resp[0].nombre;
+          nombreinput.value = resp.nombre;
           let preguntasSection = document.getElementById("preguntassection");
 
-          resp[0].preguntas.forEach((pregunta) => {
+          resp.preguntas.forEach((pregunta) => {
             let preguntacard = document.createElement("div");
             preguntacard.classList.add("card-mb-5");
-            let idpreguntacard = "preguntacard" + resp[0].uid;
+            let idpreguntacard = "preguntacard" + resp.uid;
             preguntacard.setAttribute("id", idpreguntacard);
             preguntacard.innerHTML = `
           <h5 class="card-header" style="background-color: rgb(15, 112, 230);"><i class="fas fa-sticky-note    "></i> Pregunta<button type="button" class="btn btn-outline-danger" onclick="removePregunta(${idpreguntacard})"><i class="fas fa-trash    "></i></button></h5>
           <div class="card-body">
-              <input type="text" id="inputpregunta${resp[0].uid}" class="form-control" required placeholder="Nombre" value="${pregunta}">         </div>
+              <input type="text" id="inputpregunta${resp.uid}" class="form-control" required placeholder="Nombre" value="${pregunta}">         </div>
           `;
             preguntasSection.appendChild(preguntacard);
             let selectElement = document.getElementById("selectcursos");
             let option = document.createElement("option");
-            option.text = resp[0].curso;
-            option.value = resp[0].curso;
+            option.text = resp.curso;
+            option.value = resp.curso;
             selectElement.add(option);
           });
         }
@@ -154,7 +154,6 @@
           partesURL = url.split("/"),
           codigo = partesURL[partesURL.length - 2];
         let urllink = "/api/rubricas/" + codigo;
-        console.log(codigo);
         let response = await Request.put(urllink, rubricaObject);
         if (response.status == 200) {
           window.location.replace("/rubricas");

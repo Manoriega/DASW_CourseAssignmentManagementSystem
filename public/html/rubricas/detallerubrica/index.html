@@ -61,24 +61,24 @@
         let fechalabel = document.getElementById("fecharubrica");
         let url = window.location.href,
           partesURL = url.split("/"),
-          codigo = partesURL[partesURL.length - 1];
+          codigo = partesURL[partesURL.length - 2];
         let urllink = "/api/rubricas/" + codigo;
         let response = await Request.get(urllink);
         if (response.status == 200) {
           let resp = await response.json();
           console.log(resp);
           const options = { day: "numeric", month: "short", year: "numeric" };
-          let rubricadate = new Date(resp[0].fecha);
+          let rubricadate = new Date(resp.fecha);
           console.log(rubricadate);
-          nombrelabel.innerHTML = "Nombre: " + resp[0].nombre;
-          cursolabel.innerHTML = "Curso: " + resp[0].curso;
+          nombrelabel.innerHTML = "Nombre: " + resp.nombre;
+          cursolabel.innerHTML = "Curso: " + resp.curso;
           fechalabel.innerHTML = `Fecha: <span class="badge badge-secondary">${rubricadate.toLocaleDateString(
             "en-US",
             options
           )}</span> `;
           let preguntasSection = document.getElementById("preguntassection");
 
-          resp[0].preguntas.forEach((pregunta) => {
+          resp.preguntas.forEach((pregunta) => {
             let preguntacard = document.createElement("div");
             preguntacard.classList.add("card-mb-5");
             preguntacard.innerHTML = `
